@@ -1,7 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 # :airplane: Airline-Microservices
 
-`Airline Microservice` is a simple Airline application for `online reserving flight ticket`. This application based on different software architecture and technologies like .Net Core, CQRS, DDD, Vertical Slice Architecture, Docker, kubernetes, tye, masstransit,RabbitMQ, Grpc, yarp reverse proxy, Identity Server, Redis, SqlServer, Entity Framework Core, Event Sourcing and diffrent level of testing.
+Airline Microservice is a simple Airline application for online reserving flight ticket. This application based on different software architecture and technologies like .Net Core, CQRS, DDD, Vertical Slice Architecture, Docker, kubernetes, tye, masstransit,RabbitMQ, Grpc, yarp reverse proxy, Identity Server, Redis, SqlServer, Entity Framework Core, Event Sourcing and diffrent level of testing.
 
 
 # :memo: Table of Contents
