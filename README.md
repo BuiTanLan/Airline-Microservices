@@ -2,7 +2,7 @@
 [![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/meysamhadeli/Airline-Microservices)
 # :airplane: Airline-Microservices
 
-`Airline Microservice` is a simple Airline application that has the basic business scenario for `online reserving flight ticket`. Airlines provide transport services for their passengers. All operations of an airline company are controlled by their airline management system.
+`Airline Microservice` is a simple Airline application for `online reserving flight ticket`. This application based on different software architecture and technologies like .Net Core, CQRS, DDD, Vertical Slice Architecture, Docker, kubernetes, tye, masstransit,RabbitMQ, Grpc, yarp reverse proxy, Identity Server, Redis, SqlServer, Entity Framework Core, Event Sourcing and diffrent level of testing.
 
 
 # :memo: Table of Contents
