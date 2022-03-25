@@ -1,19 +1,9 @@
 using System.Reflection;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.Utils;
-using BuildingBlocks.Web;
 using Humanizer;
-using Jaeger.Samplers;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using Jaeger;
-using MassTransit.OpenTracing;
-using MassTransit.PrometheusIntegration;
-using OpenTelemetry.Contrib.Instrumentation.MassTransit;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using OpenTracing.Util;
-
 
 namespace BuildingBlocks.MassTransit;
 
@@ -54,7 +44,6 @@ public static class Extensions
                         .Where(x => x.IsAssignableTo(typeof(IConsumer<>).MakeGenericType(type))).ToList();
 
                     if (consumers.Any())
-                    {
                         configurator.ReceiveEndpoint(
                             string.IsNullOrEmpty(rabbitMqOptions.ExchangeName)
                                 ? type.Name.Underscore()
@@ -73,12 +62,9 @@ public static class Extensions
                                     generic?.Invoke(e, new object[] {e, context, null});
                                 }
                             });
-                    }
                 }
             });
         });
-
-        services.AddMassTransitHostedService();
 
         return services;
     }

@@ -1,4 +1,3 @@
-using BuildingBlocks.CAP;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Logging;
@@ -12,16 +11,12 @@ using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
 using Figgle;
 using FluentValidation;
-using GreenPipes;
 using Hellang.Middleware.ProblemDetails;
 using Identity;
 using Identity.Data;
 using Identity.Extensions;
-using MassTransit;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Prometheus;
 using Serilog;
 
@@ -35,9 +30,9 @@ Console.WriteLine(FiggleFonts.Standard.Render(appOptions.Name));
 builder.Services.AddScoped<IDbContext>(provider => provider.GetService<IdentityContext>()!);
 
 builder.Services.AddDbContext<IdentityContext>(options =>
-    options.UseSqlServer(
-        configuration.GetConnectionString("DefaultConnection"),
-        x => x.MigrationsAssembly(typeof(IdentityRoot).Assembly.GetName().Name)))
+        options.UseSqlServer(
+            configuration.GetConnectionString("DefaultConnection"),
+            x => x.MigrationsAssembly(typeof(IdentityRoot).Assembly.GetName().Name)))
     .AddEntityFrameworkOutbox();
 
 builder.AddCustomSerilog();
