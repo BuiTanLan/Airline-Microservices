@@ -83,13 +83,13 @@ High-level plan is represented in the table
 
 ## :hammer: Structure of Project
 
-I used API Gateway([yarp](https://github.com/microsoft/reverse-proxy)) for routes synchronous and asynchronous request to the corresponding microservice. and each microservices has own business and dependencies such as databases, files and etc. and each microservices is decuple from other microservices and develop and deploy separately. and these microservices talk to each other with synchronous call like Rest or gRpc and use RabbitMq or Kafka for asynchronous call.
+I used `yarp` reverse proxy for routes synchronous and asynchronous request to the corresponding microservice. and each microservices has own business and dependencies such as databases, files and etc. and each microservices is decuple from other microservices and develop and deploy separately. and these microservices talk to each other with synchronous call like Rest or gRpc and use RabbitMq or Kafka for asynchronous call.
 
 We have separate microservice ([IdentityServer](https://github.com/DuendeSoftware/IdentityServer)) for authentication and authorization and each request go to API Gateway and then route to Identity microservices and after authentication and authorization back API Gateway and then route to expected microservices.
 
-Also here I used RabbitMQ as my MessageBroker for async communication between the microservices with using eventually consistency mechanism. and top of that I use masstransit provides many requirements in microservice projects such as messaging, availability, reliability and etc. 
+Also here I used `RabbitMQ` as my MessageBroker for async communication between the microservices with using eventually consistency mechanism. and top of that I use `MassTransit` provides many requirements in microservice projects such as messaging, availability, reliability and etc. 
 
-Microservices are event based which means they can publish and/or subscribe to any events occurring in the setup. By using this approach for communicating between services, each microservice does not need to know about the other services or handle errors occurred in other microservices.
+Microservices are `event based` which means they can publish and/or subscribe to any events occurring in the setup. By using this approach for communicating between services, each microservice does not need to know about the other services or handle errors occurred in other microservices.
 
 Here I used `Outbox Pattern` for Guaranteed Delivery and can be used as a landing zone for integration events before they are published to the message broker .
 
