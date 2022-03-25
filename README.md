@@ -4,7 +4,7 @@
 Airline Microservice is a simple Airline application for online reserving flight ticket. This application based on different software architecture and technologies like .Net Core, CQRS, DDD, Vertical Slice Architecture, Docker, kubernetes, tye, masstransit, RabbitMQ, Grpc, yarp reverse proxy, Identity Server, Redis, SqlServer, Entity Framework Core, Event Sourcing and different level of testing.
 
 
-# :memo: Table of Contents
+# Table of Contents
 
 - [The Goals of This Project](#the-goals-of-this-project)
 - [Plan](#plan)
@@ -18,7 +18,7 @@ Airline Microservice is a simple Airline application for online reserving flight
 - [Support](#support)
 - [Contribution](#contribution)
 
-## :rocket: The Goals of This Project
+## The Goals of This Project
 
 - The microservices base on `Domain Driven Design (DDD)` implementation.
 - Correct separation of bounded contexts for each microservice.
@@ -29,7 +29,7 @@ Airline Microservice is a simple Airline application for online reserving flight
 - Using Docker-Compose and Kubernetes for our deployment mechanism.
 - Implementing various type of testing like Unit Testing, Integration Testing.
 
-## :dart: Plan
+## Plan
 > This project is in progress, New features will be added over time.
 
 I will try to register some [Issues](https://github.com/meysamhadeli/Airline-Microservices/issues) for my `TODO` works, just to not forget and also for tracking my works in future.
@@ -46,7 +46,8 @@ High-level plan is represented in the table
 | Building Blocks |  In Progress 👷‍♂️ |
 
 
-## :heart: Technologies - Libraries
+:heart:
+## Technologies - Libraries
 - ✔️ **[`.NET 6`](https://dotnet.microsoft.com/download)** - .NET Framework and .NET Core, including ASP.NET and ASP.NET Core
 - ✔️ **[`MVC Versioning API`](https://github.com/microsoft/aspnet-api-versioning)** - Set of libraries which add service API versioning to ASP.NET Web API, OData with ASP.NET Web API, and ASP.NET Core
 - ✔️ **[`EF Core`](https://github.com/dotnet/efcore)** - Modern object-database mapper for .NET. It supports LINQ queries, change tracking, updates, and schema migrations
@@ -68,7 +69,7 @@ High-level plan is represented in the table
 - ✔️ **[`Tye`](https://github.com/dotnet/tye)** - Developer tool that makes developing, testing, and deploying microservices and distributed applications easier
 
 
-## :high_brightness: The Domain And Bounded Context - Service Boundary
+## The Domain And Bounded Context - Service Boundary
 
 ![](./assets/diagram.jpg)
 
@@ -81,7 +82,7 @@ High-level plan is represented in the table
 - `Reservation Service`: The Passenger Service is a bounded context for managing all operation related to reserve flight ticket.
 
 
-## :hammer: Structure of Project
+## Structure of Project
 
 I used API Gateway([yarp](https://github.com/microsoft/reverse-proxy)) for routes synchronous and asynchronous request to the corresponding microservice. and each microservices has own business and dependencies such as databases, files and etc. and each microservices is decuple from other microservices and develop and deploy separately. and these microservices talk to each other with synchronous call like Rest or gRpc and use RabbitMq or Kafka for asynchronous call.
 
@@ -125,7 +126,7 @@ With using CQRS pattern, we cut each business functionality into some vertical s
 
 
 
-## :running: How to Run
+## How to Run
 
 ### Config Certificate
 
@@ -154,7 +155,7 @@ docker-compose -f ./deployments/docker-compose/docker-compose.yaml up -d
 For testing apis I used [REST Client](https://github.com/Huachao/vscode-restclient) plugin of VSCode and this file [airline.rest](./airline.rest) is in root of project.
 Also after running api you have access to swagger open api for all microservices in /swagger route path.
 
-# Support ⭐
+# Support
 If you like my work, feel free to:
 
 - ⭐ this repository. And we will be happy together :)
@@ -162,7 +163,7 @@ If you like my work, feel free to:
 
 Thanks a bunch for supporting me!
 
-## :octocat: Contribution
+## Contribution
 
 Contributions are always welcome! Please take a look at the [contribution guidelines](https://github.com/meysamhadeli/Airline-Microservices/blob/master/contributing.md) pages first.
 
