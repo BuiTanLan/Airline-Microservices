@@ -1,5 +1,6 @@
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
+using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
@@ -16,10 +17,12 @@ using Flight;
 using Flight.Data;
 using Flight.Data.Seed;
 using Flight.Extensions;
+using Flight.GrpcServer;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Prometheus;
+using ProtoBuf.Grpc.Server;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +52,11 @@ builder.Services.AddTransient<IEventMapper, EventMapper>();
 builder.Services.AddCustomMassTransit(typeof(FlightRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<GrpcExceptionInterceptor>();
+});
+builder.Services.AddMagicOnion();
 
 SnowFlakIdGenerator.Configure(1);
 
@@ -71,11 +79,14 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     endpoints.MapMetrics();
+    endpoints.MapMagicOnionService();
 });
 
-app.MapGet("/", x => x.Response.WriteAsync(configuration["app"]));
+app.MapGet("/", x => x.Response.WriteAsync(appOptions.Name));
 app.Run();

@@ -7,11 +7,6 @@ namespace BuildingBlocks.Validation
 {
     public static class Extensions
     {
-        private static ValidationResultModel ToValidationResultModel(this ValidationResult validationResult)
-        {
-            return new ValidationResultModel(validationResult);
-        }
-
         /// <summary>
         /// Ref https://www.jerriepelser.com/blog/validation-response-aspnet-core-webapi
         /// </summary>

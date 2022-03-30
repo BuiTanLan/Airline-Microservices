@@ -50,10 +50,10 @@ public sealed class IdentityContext : IdentityDbContext<ApplicationUser, Identit
             await SaveChangesAsync(cancellationToken);
             await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
-        catch
+        catch (Exception ex)
         {
             await RollbackTransactionAsync(cancellationToken);
-            throw;
+            throw new Exception(ex.Message, ex);
         }
         finally
         {

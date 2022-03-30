@@ -3,6 +3,7 @@ using System.Linq;
 using BuildingBlocks.Domain;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.EventBus.Messages;
+using BuildingBlocks.EventBus.Messages.Contracts;
 using Flight.Flight.Events.Domain;
 
 namespace Flight;

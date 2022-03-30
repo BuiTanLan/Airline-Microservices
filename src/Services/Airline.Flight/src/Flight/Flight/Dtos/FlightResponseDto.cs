@@ -1,9 +1,9 @@
 using System;
+using System.Runtime.Serialization;
 using Flight.Aircraft.Dtos;
 using Flight.Flight.Models;
 
 namespace Flight.Flight.Dtos;
-
 public record FlightResponseDto
 {
     public long Id { get; init; }

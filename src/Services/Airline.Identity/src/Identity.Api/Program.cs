@@ -68,6 +68,7 @@ app.UseProblemDetails();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseIdentityServer();
 
 app.UseEndpoints(endpoints =>
 {
@@ -75,6 +76,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapMetrics();
 });
 
-app.MapGet("/", x => x.Response.WriteAsync(configuration["app"]));
+app.MapGet("/", x => x.Response.WriteAsync(appOptions.Name));
 
 app.Run();

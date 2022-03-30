@@ -41,10 +41,10 @@ public abstract class AppDbContextBase : DbContext, IDbContext
             await SaveChangesAsync(cancellationToken);
             await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
-        catch
+        catch (System.Exception ex)
         {
             await RollbackTransactionAsync(cancellationToken);
-            throw;
+            throw new System.Exception(ex.Message, ex);
         }
         finally
         {
@@ -92,16 +92,21 @@ public abstract class AppDbContextBase : DbContext, IDbContext
 
         foreach (var entry in ChangeTracker.Entries())
         {
-            switch (entry.State)
+            bool isAggrigate = entry.Entity.GetType().IsAssignableTo(typeof(IAggregate));
+
+            if (isAggrigate)
             {
-                case EntityState.Modified:
-                    entry.CurrentValues["LastModified"] = now;
-                    // entry.CurrentValues["LastModifiedBy"] = userId;
-                    break;
-                case EntityState.Added:
-                    entry.CurrentValues["LastModified"] = now;
-                    // entry.CurrentValues["LastModifiedBy"] = userId;
-                    break;
+                switch (entry.State)
+                {
+                    case EntityState.Modified:
+                        entry.CurrentValues["LastModified"] = now;
+                        // entry.CurrentValues["LastModifiedBy"] = userId;
+                        break;
+                    case EntityState.Added:
+                        entry.CurrentValues["LastModified"] = now;
+                        // entry.CurrentValues["LastModifiedBy"] = userId;
+                        break;
+                }
             }
         }
     }

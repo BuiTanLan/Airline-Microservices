@@ -4,12 +4,4 @@ using MediatR;
 
 namespace Flight.Seat.Features.GetAvailableSeats;
 
-public class GetAvailableSeatsQuery : IRequest<IEnumerable<SeatResponseDto>>
-{
-    // public GetAvailableSeatsQuery(long FlightId)
-    // {
-    //     this.FlightId = FlightId;
-    // }
-
-    public long FlightId { get; set; }
-}
+public record GetAvailableSeatsQuery(long FlightId) : IRequest<IEnumerable<SeatResponseDto>>;

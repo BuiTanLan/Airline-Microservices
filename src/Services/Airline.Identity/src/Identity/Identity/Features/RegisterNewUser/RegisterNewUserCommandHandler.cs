@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EventBus.Messages;
+using BuildingBlocks.EventBus.Messages.Contracts;
 using BuildingBlocks.Outbox;
 using Identity.Data;
 using Identity.Identity.Dtos;

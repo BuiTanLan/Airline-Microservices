@@ -16,6 +16,7 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Prometheus;
 using Reservation;
+using Reservation.Configuration;
 using Reservation.Data;
 using Reservation.Extensions;
 using Serilog;
@@ -24,6 +25,8 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 var appOptions = builder.Services.GetOptions<AppOptions>("AppOptions");
+builder.Services.Configure<GrpcOptions>(options => configuration.GetSection("Grpc").Bind(options));
+
 Console.WriteLine(FiggleFonts.Standard.Render(appOptions.Name));
 
 builder.Services.AddCustomDbContext<ReservationDbContext>(configuration, typeof(ReservationRoot).Assembly)
@@ -39,7 +42,6 @@ builder.Services.AddCustomMediatR();
 builder.Services.AddValidatorsFromAssembly(typeof(ReservationRoot).Assembly);
 builder.Services.AddCustomProblemDetails();
 builder.Services.AddCustomMapster(typeof(ReservationRoot).Assembly);
-builder.Services.AddRefitServices();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<IEventMapper, EventMapper>();
@@ -73,6 +75,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapMetrics();
 });
 
-app.MapGet("/", x => x.Response.WriteAsync(configuration["app"]));
+app.MapGet("/", x => x.Response.WriteAsync(appOptions.Name));
 
 app.Run();

@@ -1,5 +1,6 @@
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
+using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
@@ -47,6 +48,11 @@ builder.Services.AddTransient<IEventMapper, EventMapper>();
 
 builder.Services.AddCustomMassTransit(typeof(PassengerRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<GrpcExceptionInterceptor>();
+});
+builder.Services.AddMagicOnion();
 
 SnowFlakIdGenerator.Configure(2);
 
@@ -71,8 +77,9 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     endpoints.MapMetrics();
+    endpoints.MapMagicOnionService();
 });
 
-app.MapGet("/", x => x.Response.WriteAsync(configuration["app"]));
+app.MapGet("/", x => x.Response.WriteAsync(appOptions.Name));
 
 app.Run();

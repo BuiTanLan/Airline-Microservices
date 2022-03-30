@@ -56,11 +56,10 @@ public class EfIdentityTxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequ
 
             return response;
         }
-        catch (System.Exception)
+        catch (System.Exception ex)
         {
             await _dbContextBase.RollbackTransactionAsync(cancellationToken);
+            throw new System.Exception(ex.Message, ex);
         }
-
-        return default;
     }
 }

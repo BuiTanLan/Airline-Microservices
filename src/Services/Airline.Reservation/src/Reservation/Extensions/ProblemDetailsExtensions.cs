@@ -1,10 +1,12 @@
 using BuildingBlocks.Exception;
+using Grpc.Core;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Reservation.Configuration;
 
 namespace Reservation.Extensions;
 
@@ -65,17 +67,19 @@ public static class ProblemDetailsExtensions
                 Detail = ex.Message,
                 Type = "https://somedomain/application-error"
             });
-            x.Map<IdentityException>(ex =>
+            x.Map<IdentityException>(ex => new ProblemDetails
             {
-                var pd = new ProblemDetails
-                {
-                    Status = (int)ex.StatusCode,
-                    Title = "identity exception",
-                    Detail = ex.Message,
-                    Type = "https://somedomain/identity-error"
-                };
-
-                return pd;
+                Status = (int)ex.StatusCode,
+                Title = "identity exception",
+                Detail = ex.Message,
+                Type = "https://somedomain/identity-error"
+            });
+            x.Map<RpcException>(ex => new ProblemDetails
+            {
+                Status = (int)ex.Status.StatusCode,
+                Title = "grpc exception",
+                Detail = ex.Status.Detail,
+                Type = "https://somedomain/grpc-error"
             });
             x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
         });

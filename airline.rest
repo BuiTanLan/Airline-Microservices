@@ -198,6 +198,6 @@ authorization: bearer {{Authenticate.response.body.access_token}}
 {
   "passengerId": 1,
   "flightId": 1,
-  "description": "I want to fly to iran"
+  "description": "I want to flssy to iran"
 }
 ###
