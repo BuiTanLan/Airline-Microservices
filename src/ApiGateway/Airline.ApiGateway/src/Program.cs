@@ -1,11 +1,16 @@
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
+using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
+using Figgle;
 using Microsoft.AspNetCore.Authentication;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+var appOptions = builder.Services.GetOptions<AppOptions>("AppOptions");
+Console.WriteLine(FiggleFonts.Standard.Render(appOptions.Name));
 
 builder.AddCustomSerilog();
 builder.Services.AddJwt();
@@ -16,8 +21,6 @@ builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSecti
 
 
 var app = builder.Build();
-
-
 
 app.UseSerilogRequestLogging();
 app.UseCorrelationId();
