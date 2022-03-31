@@ -1,8 +1,6 @@
 using Ardalis.GuardClauses;
-using BuildingBlocks.Domain;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.EFCore;
-using BuildingBlocks.EventBus.Messages;
 using BuildingBlocks.Web;
 using Humanizer;
 using MassTransit;

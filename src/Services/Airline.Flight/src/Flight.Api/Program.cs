@@ -1,3 +1,5 @@
+using System.Reflection;
+using BuildingBlocks.Caching;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Exception;
@@ -52,14 +54,22 @@ builder.Services.AddTransient<IEventMapper, EventMapper>();
 builder.Services.AddCustomMassTransit(typeof(FlightRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 builder.Services.AddGrpc(options =>
 {
     options.Interceptors.Add<GrpcExceptionInterceptor>();
 });
+
 builder.Services.AddMagicOnion();
 
 SnowFlakIdGenerator.Configure(1);
 
+builder.Services.AddCachingRequestPolicies(new List<Assembly>
+{
+    typeof(FlightRoot).Assembly
+});
+
+builder.Services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
 var app = builder.Build();
 

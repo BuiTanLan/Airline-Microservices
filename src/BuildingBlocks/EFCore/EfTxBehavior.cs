@@ -64,10 +64,10 @@ public class EfTxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TRe
 
             return response;
         }
-        catch (System.Exception ex)
+        catch
         {
             await _dbContextBase.RollbackTransactionAsync(cancellationToken);
-            throw new System.Exception(ex.Message, ex);
+            throw;
         }
     }
 }

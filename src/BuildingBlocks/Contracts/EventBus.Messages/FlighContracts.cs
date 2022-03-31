@@ -1,5 +1,5 @@
 using BuildingBlocks.Domain.Event;
 
-namespace BuildingBlocks.EventBus.Messages.Contracts;
+namespace BuildingBlocks.Contracts.EventBus.Messages;
 
 public record FlightCreated(string FlightNumber) : IIntegrationEvent;

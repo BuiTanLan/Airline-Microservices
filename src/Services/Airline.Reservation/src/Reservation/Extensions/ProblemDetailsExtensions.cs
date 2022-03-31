@@ -56,7 +56,7 @@ public static class ProblemDetailsExtensions
             x.Map<InternalServerException>(ex => new ProblemDetails
             {
                 Title = "api server exception",
-                Status = StatusCodes.Status500InternalServerError,
+                Status = StatusCodes.Status400BadRequest,
                 Detail = ex.Message,
                 Type = "https://somedomain/api-server-error"
             });
@@ -74,13 +74,15 @@ public static class ProblemDetailsExtensions
                 Detail = ex.Message,
                 Type = "https://somedomain/identity-error"
             });
+
             x.Map<RpcException>(ex => new ProblemDetails
             {
-                Status = (int)ex.Status.StatusCode,
+                Status = StatusCodes.Status400BadRequest,
                 Title = "grpc exception",
                 Detail = ex.Status.Detail,
                 Type = "https://somedomain/grpc-error"
             });
+
             x.MapToStatusCode<ArgumentNullException>(StatusCodes.Status400BadRequest);
         });
         return services;

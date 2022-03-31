@@ -1,18 +1,12 @@
-using System;
-using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
+using BuildingBlocks.Contracts.EventBus.Messages;
 using BuildingBlocks.Domain;
-using BuildingBlocks.EventBus.Messages;
-using BuildingBlocks.EventBus.Messages.Contracts;
-using BuildingBlocks.Outbox;
-using Identity.Data;
 using Identity.Identity.Dtos;
 using Identity.Identity.Exceptions;
 using Identity.Identity.Models;
-using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,16 +14,13 @@ namespace Identity.Identity.Features.RegisterNewUser;
 
 public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, RegisterNewUserResponseDto>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IdentityContext _identityContext;
     private readonly IEventProcessor _eventProcessor;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public RegisterNewUserCommandHandler(UserManager<ApplicationUser> userManager,
-        IdentityContext identityContext,
         IEventProcessor eventProcessor)
     {
         _userManager = userManager;
-        _identityContext = identityContext;
         _eventProcessor = eventProcessor;
     }
 

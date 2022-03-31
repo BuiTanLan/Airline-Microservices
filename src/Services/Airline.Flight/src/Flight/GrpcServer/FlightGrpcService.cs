@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BuildingBlocks.Grpc.Contracts;
+using BuildingBlocks.Contracts.Grpc;
 using Flight.Flight.Features.GetFlightById;
 using Flight.Seat.Features.GetAvailableSeats;
 using Flight.Seat.Features.ReserveSeat;
@@ -7,7 +7,7 @@ using MagicOnion;
 using MagicOnion.Server;
 using Mapster;
 using MediatR;
-using SeatResponseDto = BuildingBlocks.Grpc.Contracts.SeatResponseDto;
+using SeatResponseDto = BuildingBlocks.Contracts.Grpc.SeatResponseDto;
 
 namespace Flight.GrpcServer;
 

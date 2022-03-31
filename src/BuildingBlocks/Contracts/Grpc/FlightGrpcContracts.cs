@@ -1,7 +1,7 @@
 using MagicOnion;
 using MessagePack;
 
-namespace BuildingBlocks.Grpc.Contracts;
+namespace BuildingBlocks.Contracts.Grpc;
 
 
     public interface IFlightGrpcService : IService<IFlightGrpcService>

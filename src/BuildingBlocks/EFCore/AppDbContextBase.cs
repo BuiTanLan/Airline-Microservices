@@ -41,10 +41,10 @@ public abstract class AppDbContextBase : DbContext, IDbContext
             await SaveChangesAsync(cancellationToken);
             await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
-        catch (System.Exception ex)
+        catch
         {
             await RollbackTransactionAsync(cancellationToken);
-            throw new System.Exception(ex.Message, ex);
+            throw;
         }
         finally
         {

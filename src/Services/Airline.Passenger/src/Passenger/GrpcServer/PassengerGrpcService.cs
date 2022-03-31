@@ -1,4 +1,4 @@
-using BuildingBlocks.Grpc.Contracts;
+using BuildingBlocks.Contracts.Grpc;
 using MagicOnion;
 using MagicOnion.Server;
 using Mapster;

@@ -24,7 +24,7 @@ public class GrpcExceptionInterceptor : Interceptor
         }
         catch (System.Exception exception)
         {
-            throw new RpcException(new Status(StatusCode.Internal, exception.Message));
+            throw new RpcException(new Status(StatusCode.Cancelled, exception.Message));
         }
     }
 }

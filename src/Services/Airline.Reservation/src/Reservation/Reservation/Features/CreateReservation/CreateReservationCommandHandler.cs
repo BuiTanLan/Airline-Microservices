@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
+using BuildingBlocks.Contracts.Grpc;
 using BuildingBlocks.Domain;
-using BuildingBlocks.Grpc.Contracts;
+using BuildingBlocks.Exception;
 using Grpc.Core;
 using Grpc.Net.Client;
 using MagicOnion.Client;
@@ -47,32 +48,25 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
     {
         Guard.Against.Null(command, nameof(command));
 
-        try
+        var flight = await _flightGrpcService.GetById(command.FlightId);
+        if (flight is null)
+            throw new FlightNotFoundException();
+        var passenger = await _passengerGrpcService.GetById(command.PassengerId);
+
+        var emptySeat = (await _flightGrpcService.GetAvailableSeats(command.FlightId))?.First();
+
+        var reservationEntity = Models.Reservation.Create(new PassengerInfo(passenger.Name), new Trip(
+            flight.FlightNumber, flight.AircraftId, flight.DepartureAirportId,
+            flight.ArriveAirportId, flight.FlightDate, flight.Price, command.Description, emptySeat?.SeatNumber));
+
+        await _flightGrpcService.ReserveSeat(new ReserveSeatRequestDto
         {
-            var flight = await _flightGrpcService.GetById(command.FlightId);
-            if (flight is null)
-                throw new FlightNotFoundException();
-            var passenger = await _passengerGrpcService.GetById(command.PassengerId);
+            FlightId = flight.Id, SeatNumber = emptySeat?.SeatNumber
+        });
 
-            var emptySeat = (await _flightGrpcService.GetAvailableSeats(command.FlightId))?.First();
+        var newReservation =
+            await _reservationDbContext.Reservations.AddAsync(reservationEntity, cancellationToken);
 
-            var reservationEntity = Models.Reservation.Create(new PassengerInfo(passenger.Name), new Trip(
-                flight.FlightNumber, flight.AircraftId, flight.DepartureAirportId,
-                flight.ArriveAirportId, flight.FlightDate, flight.Price, command.Description, emptySeat?.SeatNumber));
-
-            await _flightGrpcService.ReserveSeat(new ReserveSeatRequestDto
-            {
-                FlightId = flight.Id, SeatNumber = emptySeat?.SeatNumber
-            });
-
-            var newReservation =
-                await _reservationDbContext.Reservations.AddAsync(reservationEntity, cancellationToken);
-
-            return _mapper.Map<ReservationResponseDto>(newReservation.Entity);
-        }
-        catch (RpcException ex)
-        {
-            throw new Exception(ex.Status.Detail);
-        }
+        return _mapper.Map<ReservationResponseDto>(newReservation.Entity);
     }
 }
