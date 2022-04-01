@@ -64,7 +64,9 @@ builder.Services.AddMagicOnion();
 
 SnowFlakIdGenerator.Configure(1);
 
-builder.Services.AddCachingRequestPolicies(new List<Assembly>
+
+
+builder.Services.AddCachingRequest(new List<Assembly>
 {
     typeof(FlightRoot).Assembly
 });

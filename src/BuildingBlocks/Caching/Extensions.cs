@@ -5,7 +5,7 @@ namespace BuildingBlocks.Caching;
 
 public static class Extensions
 {
-    public static IServiceCollection AddCachingRequestPolicies(this IServiceCollection services,
+    public static IServiceCollection AddCachingRequest(this IServiceCollection services,
         IList<Assembly> assembliesToScan)
     {
         // ICacheRequest discovery and registration

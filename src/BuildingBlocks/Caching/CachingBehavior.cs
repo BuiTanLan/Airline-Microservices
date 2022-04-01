@@ -33,7 +33,7 @@ namespace BuildingBlocks.Caching
         {
             if (_cacheRequest == null)
             {
-                // No cache policy found, so just continue through the pipeline
+                // No cache request found, so just continue through the pipeline
                 return await next();
             }
 
