@@ -44,6 +44,6 @@ app.UseEndpoints(endpoints =>
     });
 });
 
-app.MapGet("/", x=> x.Response.WriteAsync(configuration["app"]));
+app.MapGet("/", x => x.Response.WriteAsync(appOptions.Name));
 
 app.Run();

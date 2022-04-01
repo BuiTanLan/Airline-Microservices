@@ -15,30 +15,29 @@ namespace BuildingBlocks.Caching
     {
         private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
         private readonly IEasyCachingProvider _cachingProvider;
-        private readonly IEnumerable<ICacheRequest<TRequest, TResponse>> _cacheRequests;
+        private readonly ICacheRequest<TRequest, TResponse> _cacheRequest;
         private readonly int defaultCacheExpirationInHours = 1;
 
         public CachingBehavior(IEasyCachingProviderFactory cachingFactory,
             ILogger<CachingBehavior<TRequest, TResponse>> logger,
-            IEnumerable<ICacheRequest<TRequest, TResponse>> cacheRequests)
+            ICacheRequest<TRequest, TResponse> cacheRequest)
         {
             _logger = logger;
             _cachingProvider = cachingFactory.GetCachingProvider("mem");
-            _cacheRequests = cacheRequests;
+            _cacheRequest = cacheRequest;
         }
 
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
-            var cacheRequest = _cacheRequests.FirstOrDefault();
-            if (cacheRequest == null)
+            if (_cacheRequest == null)
             {
                 // No cache policy found, so just continue through the pipeline
                 return await next();
             }
 
-            var cacheKey = cacheRequest.GetCacheKey(request);
+            var cacheKey = _cacheRequest.GetCacheKey(request);
             var cachedResponse = await _cachingProvider.GetAsync<TResponse>(cacheKey);
             if (cachedResponse.Value != null)
             {
@@ -49,7 +48,7 @@ namespace BuildingBlocks.Caching
 
             var response = await next();
 
-            var expirationTime = cacheRequest.AbsoluteExpirationRelativeToNow ??
+            var expirationTime = _cacheRequest.AbsoluteExpirationRelativeToNow ??
                                  DateTime.Now.AddHours(defaultCacheExpirationInHours);
 
             await _cachingProvider.SetAsync(cacheKey, response, expirationTime.TimeOfDay);
