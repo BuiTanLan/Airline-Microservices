@@ -7,6 +7,6 @@ namespace BuildingBlocks.Caching
     public interface IInvalidateCacheRequest<in TRequest, out TResponse>
         where TRequest : IRequest<TResponse>
     {
-        string GetCacheKey(TRequest request) => $"{request.GetType().FullName}-{request.GetHashCode()}";
+        string CacheKey { get; }
     }
 }

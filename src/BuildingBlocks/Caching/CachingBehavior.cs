@@ -37,7 +37,7 @@ namespace BuildingBlocks.Caching
                 return await next();
             }
 
-            var cacheKey = _cacheRequest.GetCacheKey(request);
+            var cacheKey = _cacheRequest.CacheKey;
             var cachedResponse = await _cachingProvider.GetAsync<TResponse>(cacheKey);
             if (cachedResponse.Value != null)
             {

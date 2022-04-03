@@ -35,7 +35,7 @@ namespace BuildingBlocks.Caching
                 return await next();
             }
 
-            var cacheKey = _invalidateCacheRequest.GetCacheKey(request);
+            var cacheKey = _invalidateCacheRequest.CacheKey;
             var response = await next();
 
             await _cachingProvider.RemoveAsync(cacheKey);

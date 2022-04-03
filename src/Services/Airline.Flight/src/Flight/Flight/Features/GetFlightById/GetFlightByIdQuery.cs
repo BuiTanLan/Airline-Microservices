@@ -4,5 +4,4 @@ using MediatR;
 
 namespace Flight.Flight.Features.GetFlightById;
 
-public record GetFlightByIdQuery(long Id) : IRequest<FlightResponseDto>,
-    ICacheRequest<GetFlightByIdQuery, FlightResponseDto>;
+public record GetFlightByIdQuery(long Id) : IRequest<FlightResponseDto>;
