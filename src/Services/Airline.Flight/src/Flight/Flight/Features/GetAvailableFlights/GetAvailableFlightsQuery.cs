@@ -6,8 +6,7 @@ using MediatR;
 
 namespace Flight.Flight.Features.GetAvailableFlights;
 
-public record GetAvailableFlightsQuery : IRequest<IEnumerable<FlightResponseDto>>,
-    ICacheRequest<GetAvailableFlightsQuery, IEnumerable<FlightResponseDto>>
+public record GetAvailableFlightsQuery : IRequest<IEnumerable<FlightResponseDto>>, ICacheRequest
 {
     public string CacheKey => "GetAvailableFlightsQuery";
     public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddHours(1);

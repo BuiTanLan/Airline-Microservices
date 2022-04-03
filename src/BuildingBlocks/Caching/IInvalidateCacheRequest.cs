@@ -4,8 +4,7 @@ using MediatR;
 
 namespace BuildingBlocks.Caching
 {
-    public interface IInvalidateCacheRequest<in TRequest, out TResponse>
-        where TRequest : IRequest<TResponse>
+    public interface IInvalidateCacheRequest
     {
         string CacheKey { get; }
     }

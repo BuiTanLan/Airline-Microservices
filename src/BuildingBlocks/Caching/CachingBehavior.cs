@@ -15,12 +15,12 @@ namespace BuildingBlocks.Caching
     {
         private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
         private readonly IEasyCachingProvider _cachingProvider;
-        private readonly ICacheRequest<TRequest, TResponse> _cacheRequest;
+        private readonly ICacheRequest _cacheRequest;
         private readonly int defaultCacheExpirationInHours = 1;
 
         public CachingBehavior(IEasyCachingProviderFactory cachingFactory,
             ILogger<CachingBehavior<TRequest, TResponse>> logger,
-            ICacheRequest<TRequest, TResponse> cacheRequest)
+            ICacheRequest cacheRequest)
         {
             _logger = logger;
             _cachingProvider = cachingFactory.GetCachingProvider("mem");

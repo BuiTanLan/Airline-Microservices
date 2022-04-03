@@ -6,23 +6,23 @@ namespace BuildingBlocks.Caching;
 public static class Extensions
 {
     public static IServiceCollection AddCachingRequest(this IServiceCollection services,
-        IList<Assembly> assembliesToScan)
+        IList<Assembly> assembliesToScan, ServiceLifetime lifetime = ServiceLifetime.Transient)
     {
         // ICacheRequest discovery and registration
         services.Scan(scan => scan
             .FromAssemblies(assembliesToScan ?? AppDomain.CurrentDomain.GetAssemblies())
-            .AddClasses(classes => classes.AssignableTo(typeof(ICacheRequest<,>)),
+            .AddClasses(classes => classes.AssignableTo(typeof(ICacheRequest)),
                 false)
             .AsImplementedInterfaces()
-            .WithTransientLifetime());
+            .WithLifetime(lifetime));
 
         // IInvalidateCacheRequest discovery and registration
         services.Scan(scan => scan
             .FromAssemblies(assembliesToScan ?? AppDomain.CurrentDomain.GetAssemblies())
-            .AddClasses(classes => classes.AssignableTo(typeof(IInvalidateCacheRequest<,>)),
+            .AddClasses(classes => classes.AssignableTo(typeof(IInvalidateCacheRequest)),
                 false)
             .AsImplementedInterfaces()
-            .WithTransientLifetime());
+            .WithLifetime(lifetime));
 
         return services;
     }
