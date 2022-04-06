@@ -3,6 +3,9 @@
 
 Airline Microservice is a simple Airline application for online reserving flight ticket. This application based on different software architecture and technologies like .Net Core, CQRS, DDD, Vertical Slice Architecture, Docker, kubernetes, tye, masstransit, RabbitMQ, Grpc, yarp reverse proxy, Identity Server, Redis, SqlServer, Entity Framework Core, Event Sourcing and different level of testing.
 
+
+🌀 Keep in mind this repository is work in progress and will be complete over time 🚀
+
 [![Sparkline](https://stars.medv.io/meysamhadeli/Airline-Microservices.svg)](https://stars.medv.io/meysamhadeli/Airline-Microservices)
 
 # Table of Contents
