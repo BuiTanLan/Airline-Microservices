@@ -6,8 +6,6 @@ Airline Microservice is a simple Airline application for online reserving flight
 
 🌀 Keep in mind this repository is work in progress and will be complete over time 🚀
 
-[![Sparkline](https://stars.medv.io/meysamhadeli/Airline-Microservices.svg)](https://stars.medv.io/meysamhadeli/Airline-Microservices)
-
 # Table of Contents
 
 - [The Goals of This Project](#the-goals-of-this-project)
