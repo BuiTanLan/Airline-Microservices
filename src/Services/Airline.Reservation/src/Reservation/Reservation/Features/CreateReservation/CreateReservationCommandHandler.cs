@@ -8,7 +8,6 @@ using MagicOnion.Client;
 using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.Options;
-using Refit;
 using Reservation.Configuration;
 using Reservation.Data;
 using Reservation.Reservation.Dtos;

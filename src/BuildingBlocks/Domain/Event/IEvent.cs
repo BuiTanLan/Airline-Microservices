@@ -1,8 +1,9 @@
 using MassTransit;
+using MediatR;
 
 namespace BuildingBlocks.Domain.Event;
 
-public interface IEvent
+public interface IEvent: INotification
 {
     Guid EventId => Guid.NewGuid();
     public DateTime OccurredOn => DateTime.Now;

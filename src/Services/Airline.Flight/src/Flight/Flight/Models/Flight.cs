@@ -3,6 +3,8 @@ using BuildingBlocks.Domain;
 using BuildingBlocks.Domain.Model;
 using BuildingBlocks.IdsGenerator;
 using Flight.Flight.Events.Domain;
+using Flight.Flight.Exceptions;
+using JetBrains.Annotations;
 
 namespace Flight.Flight.Models;
 
@@ -43,5 +45,21 @@ public class Flight : BaseAggregateRoot<long>
         flight.AddDomainEvent(new FlightCreatedDomainEvent(flight.FlightNumber));
 
         return flight;
+    }
+
+
+    public Flight When(Flight entity, object @event)
+    {
+        switch (@event)
+        {
+            case FlightCreatedDomainEvent(var flightNumber):
+            {
+                FlightNumber = flightNumber;
+                return entity;
+            }
+
+            default:
+                return entity;
+        }
     }
 }

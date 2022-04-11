@@ -1,12 +1,17 @@
 using BuildingBlocks.Domain.Event;
+using BuildingBlocks.EventStoreDB.Core.Projections;
 
 namespace BuildingBlocks.Domain.Model
 {
-    public interface IAggregate
+    public interface IAggregate : IAggregate<Guid>
     {
+    }
+
+    public interface IAggregate<out T> : IProjection
+    {
+        T Id { get; }
         IReadOnlyList<IDomainEvent> DomainEvents { get; }
-        void AddDomainEvent(IDomainEvent domainEvent);
-        void RemoveDomainEvent(IDomainEvent domainEvent);
-        void ClearDomainEvents();
+        IEvent[] ClearDomainEvents();
+        int Version { get; }
     }
 }

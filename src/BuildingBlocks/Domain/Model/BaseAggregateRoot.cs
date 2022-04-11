@@ -3,7 +3,7 @@ using BuildingBlocks.Domain.Event;
 
 namespace BuildingBlocks.Domain.Model
 {
-    public abstract class BaseAggregateRoot<TId> : Entity<TId>, IAggregate
+    public abstract class BaseAggregateRoot<TId> : Entity<TId>, IAggregate<TId>
     {
         private readonly List<IDomainEvent> _domainEvents = new();
 
@@ -16,8 +16,17 @@ namespace BuildingBlocks.Domain.Model
 
         public void RemoveDomainEvent(IDomainEvent domainEvent)
             => _domainEvents?.Remove(domainEvent);
+        public IEvent[] ClearDomainEvents()
+        {
+            var dequeuedEvents = _domainEvents.ToArray();
 
-        public void ClearDomainEvents()
-            => _domainEvents?.Clear();
+            _domainEvents.Clear();
+
+            return dequeuedEvents;
+        }
+
+        public int Version { get; protected set;}
+
+        public virtual void When(object @event) { }
     }
 }
