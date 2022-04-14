@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Flight.Flight.Features.CreateFlight;
 
-public class CreateFlightCommandHandler : IRequestHandler<CreateFlightCommand, FlightResponseDto>
+public class CreateFlightCommandHandler : IRequestHandler<CreateFlightCommand, ulong>
 {
     private readonly IEventStoreDBRepository<Models.Flight, long> _eventStoreDbRepository;
 
@@ -23,9 +23,22 @@ public class CreateFlightCommandHandler : IRequestHandler<CreateFlightCommand, F
     {
         _eventStoreDbRepository = eventStoreDbRepository;
     }
-    public async Task<FlightResponseDto> Handle(CreateFlightCommand command, CancellationToken cancellationToken)
+    public async Task<ulong> Handle(CreateFlightCommand command, CancellationToken cancellationToken)
     {
+        Guard.Against.Null(command, nameof(command));
 
-        return null;
+        var flight = await _eventStoreDbRepository.Find(command.Id, cancellationToken);
+
+        if (flight is not null)
+            throw new FlightAlreadyExistException();
+
+        var aggrigate = Models.Flight.Create(command.Id, command.FlightNumber, command.AircraftId,
+            command.DepartureAirportId, command.DepartureDate,
+            command.ArriveDate, command.ArriveAirportId, command.DurationMinutes, command.FlightDate,
+            FlightStatus.Completed, command.Price);
+
+        var result = await _eventStoreDbRepository.Add(aggrigate, cancellationToken);
+
+        return result;
     }
 }

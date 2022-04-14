@@ -21,7 +21,6 @@ public class Flight : BaseAggregateRoot<long>
     public FlightStatus Status { get; private set; }
     public decimal Price { get; private set; }
 
-    // public IEnumerable<Seat> Seats { get; set; }
     public static Flight Create(long id, string flightNumber, long aircraftId,
         long departureAirportId, DateTime departureDate, DateTime arriveDate,
         long arriveAirportId, decimal durationMinutes, DateTime flightDate, FlightStatus status,
@@ -65,7 +64,17 @@ public class Flight : BaseAggregateRoot<long>
 
     private void Apply(FlightCreatedDomainEvent @event)
     {
-        Version++;
+        Id = @event.Id;
         FlightNumber = @event.FlightNumber;
+        Price = @event.Price;
+        Status = @event.Status;
+        AircraftId = @event.AircraftId;
+        DepartureAirportId = @event.DepartureAirportId;
+        DepartureDate = @event.DepartureDate;
+        ArriveAirportId = @event.ArriveAirportId;
+        ArriveDate = @event.ArriveDate;
+        DurationMinutes = @event.DurationMinutes;
+        FlightDate = @event.FlightDate;
+        Version++;
     }
 }

@@ -29,7 +29,7 @@ namespace BuildingBlocks.Caching
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
-            if (_invalidateCacheRequest == null)
+            if (request is not IInvalidateCacheRequest || _invalidateCacheRequest == null)
             {
                 // No cache request found, so just continue through the pipeline
                 return await next();

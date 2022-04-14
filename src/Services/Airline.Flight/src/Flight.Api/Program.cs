@@ -4,6 +4,7 @@ using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.EventStoreDB;
 using BuildingBlocks.EventStoreDB.Core;
+using BuildingBlocks.EventStoreDB.Repository;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
@@ -21,12 +22,10 @@ using Flight;
 using Flight.Data;
 using Flight.Data.Seed;
 using Flight.Extensions;
-using Flight.GrpcServer;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Prometheus;
-using ProtoBuf.Grpc.Server;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,9 +73,7 @@ builder.Services.AddCachingRequest(new List<Assembly>
 builder.Services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
 // EventStoreDB Configuration
-
-builder.Services.AddScoped<BuildingBlocks.EventStoreDB.Repository.IEventStoreDBRepository<Flight.Flight.Models.Flight, long>, BuildingBlocks.EventStoreDB.Repository.EventStoreDBRepository<Flight.Flight.Models.Flight, long>>();
-
+builder.Services.AddScoped<IEventStoreDBRepository<Flight.Flight.Models.Flight, long>, EventStoreDBRepository<Flight.Flight.Models.Flight, long>>();
 builder.Services.AddEventStore(configuration, typeof(FlightRoot).Assembly)
     .AddEventStoreDBSubscriptionToAll();
 

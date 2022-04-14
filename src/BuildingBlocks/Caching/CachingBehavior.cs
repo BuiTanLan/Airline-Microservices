@@ -31,7 +31,8 @@ namespace BuildingBlocks.Caching
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
-            if (_cacheRequest == null)
+
+            if (request is not ICacheRequest || _cacheRequest == null)
             {
                 // No cache request found, so just continue through the pipeline
                 return await next();
