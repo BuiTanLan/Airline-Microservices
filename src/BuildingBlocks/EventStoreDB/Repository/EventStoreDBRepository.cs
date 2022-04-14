@@ -5,15 +5,15 @@ using EventStore.Client;
 
 namespace BuildingBlocks.EventStoreDB.Repository;
 
-public interface IEventStoreDBRepository<T> where T : class, IAggregate
+public interface IEventStoreDBRepository<T, TKey> where T : class, IAggregate<TKey>
 {
-    Task<T?> Find(Guid id, CancellationToken cancellationToken);
+    Task<T?> Find<TKey>(TKey id, CancellationToken cancellationToken);
     Task<ulong> Add(T aggregate, CancellationToken cancellationToken);
     Task<ulong> Update(T aggregate, ulong? expectedRevision = null, CancellationToken cancellationToken = default);
     Task<ulong> Delete(T aggregate, ulong? expectedRevision = null, CancellationToken cancellationToken = default);
 }
 
-public class EventStoreDBRepository<T>: IEventStoreDBRepository<T> where T : class, IAggregate
+public class EventStoreDBRepository<T, TKey>: IEventStoreDBRepository<T, TKey> where T : class, IAggregate<TKey>
 {
     private readonly EventStoreClient eventStore;
 
@@ -22,8 +22,8 @@ public class EventStoreDBRepository<T>: IEventStoreDBRepository<T> where T : cla
         this.eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
     }
 
-    public Task<T?> Find(Guid id, CancellationToken cancellationToken) =>
-        eventStore.AggregateStream<T>(
+    public Task<T?> Find<TKey>(TKey id, CancellationToken cancellationToken) =>
+        eventStore.AggregateStream<T, TKey>(
             id,
             cancellationToken
         );

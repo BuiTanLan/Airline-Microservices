@@ -11,7 +11,7 @@ namespace Flight.Flight.Features.GetFlightById;
 [Route(BaseApiPath + "/flight")]
 public class GetFlightByIdEndpoint: BaseController
 {
-    [Authorize]
+    // [Authorize]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

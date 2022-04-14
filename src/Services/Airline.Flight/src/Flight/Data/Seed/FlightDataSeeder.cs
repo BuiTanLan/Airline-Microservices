@@ -20,7 +20,7 @@ public class FlightDataSeeder : IDataSeeder
     {
         await SeedAirportAsync();
         await SeedAircraftAsync();
-        await SeedFlightAsync();
+        // await SeedFlightAsync();
         await SeedSeatAsync();
     }
 
@@ -75,20 +75,20 @@ public class FlightDataSeeder : IDataSeeder
         }
     }
 
-    private async Task SeedFlightAsync()
-    {
-        if (!await _flightDbContext.Flights.AnyAsync())
-        {
-            var flights = new List<Flight.Models.Flight>
-            {
-                Flight.Models.Flight.Create("BD467", 1, 1, new DateTime(2022, 1, 31, 12, 0, 0),
-                    new DateTime(2022, 1, 31, 14, 0, 0),
-                    2, 120m,
-                    new DateTime(2022, 1, 31), FlightStatus.Completed,
-                    8000, true, 1)
-            };
-            await _flightDbContext.Flights.AddRangeAsync(flights);
-            await _flightDbContext.SaveChangesAsync();
-        }
-    }
+    // private async Task SeedFlightAsync()
+    // {
+    //     if (!await _flightDbContext.Flights.AnyAsync())
+    //     {
+    //         var flights = new List<Flight.Models.Flight>
+    //         {
+    //             Flight.Models.Flight.Create("BD467", 1, 1, new DateTime(2022, 1, 31, 12, 0, 0),
+    //                 new DateTime(2022, 1, 31, 14, 0, 0),
+    //                 2, 120m,
+    //                 new DateTime(2022, 1, 31), FlightStatus.Completed,
+    //                 8000, true, 1)
+    //         };
+    //         await _flightDbContext.Flights.AddRangeAsync(flights);
+    //         await _flightDbContext.SaveChangesAsync();
+    //     }
+    // }
 }

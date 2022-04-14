@@ -2,6 +2,8 @@ using System.Reflection;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
+using BuildingBlocks.EventStoreDB;
+using BuildingBlocks.EventStoreDB.Core;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
@@ -64,14 +66,20 @@ builder.Services.AddMagicOnion();
 
 SnowFlakIdGenerator.Configure(1);
 
-
-
 builder.Services.AddCachingRequest(new List<Assembly>
 {
     typeof(FlightRoot).Assembly
 });
 
 builder.Services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
+
+// EventStoreDB Configuration
+
+builder.Services.AddScoped<BuildingBlocks.EventStoreDB.Repository.IEventStoreDBRepository<Flight.Flight.Models.Flight, long>, BuildingBlocks.EventStoreDB.Repository.EventStoreDBRepository<Flight.Flight.Models.Flight, long>>();
+
+builder.Services.AddEventStore(configuration, typeof(FlightRoot).Assembly)
+    .AddEventStoreDBSubscriptionToAll();
+
 
 var app = builder.Build();
 

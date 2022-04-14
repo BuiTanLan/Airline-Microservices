@@ -8,7 +8,7 @@ namespace BuildingBlocks.EventStoreDB.Core;
 
 public static class Configuration
 {
-    public static IServiceCollection AddCoreServices(
+    public static IServiceCollection AddEventStore(
         this IServiceCollection services,
         IConfiguration configuration,
         params Assembly[] assemblies
@@ -17,8 +17,8 @@ public static class Configuration
         var assembliesToScan = (assemblies.Any() ? assemblies : new[] { Assembly.GetEntryAssembly()! });
 
         return services
-            .AddEventBus()
-            .AddMediatR(assembliesToScan!)
+            // .AddEventBus()
+            // .AddMediatR(assembliesToScan!)
             .AddEventStoreDB(configuration)
             .AddProjections(assembliesToScan);
     }

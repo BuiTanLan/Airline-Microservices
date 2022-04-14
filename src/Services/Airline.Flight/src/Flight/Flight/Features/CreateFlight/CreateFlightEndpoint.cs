@@ -11,7 +11,7 @@ namespace Flight.Flight.Features.CreateFlight;
 [Route(BaseApiPath + "/flight")]
 public class CreateFlightEndpoint : BaseController
 {
-    [Authorize]
+    // [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

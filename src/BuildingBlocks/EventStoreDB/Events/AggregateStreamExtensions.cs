@@ -6,9 +6,9 @@ namespace BuildingBlocks.EventStoreDB.Events;
 
 public static class AggregateStreamExtensions
 {
-    public static async Task<T?> AggregateStream<T>(
+    public static async Task<T?> AggregateStream<T, TKey>(
         this EventStoreClient eventStore,
-        Guid id,
+        TKey id,
         CancellationToken cancellationToken,
         ulong? fromVersion = null
     ) where T : class, IProjection

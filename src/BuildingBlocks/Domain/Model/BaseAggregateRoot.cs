@@ -6,7 +6,6 @@ namespace BuildingBlocks.Domain.Model
     public abstract class BaseAggregateRoot<TId> : Entity<TId>, IAggregate<TId>
     {
         private readonly List<IDomainEvent> _domainEvents = new();
-
         public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         public void AddDomainEvent(IDomainEvent domainEvent)
@@ -14,8 +13,6 @@ namespace BuildingBlocks.Domain.Model
             _domainEvents.Add(domainEvent);
         }
 
-        public void RemoveDomainEvent(IDomainEvent domainEvent)
-            => _domainEvents?.Remove(domainEvent);
         public IEvent[] ClearDomainEvents()
         {
             var dequeuedEvents = _domainEvents.ToArray();

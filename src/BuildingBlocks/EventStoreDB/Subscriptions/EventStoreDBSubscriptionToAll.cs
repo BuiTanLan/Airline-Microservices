@@ -4,6 +4,7 @@ using BuildingBlocks.EventStoreDB.Projections;
 using BuildingBlocks.Utils;
 using EventStore.Client;
 using Grpc.Core;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.EventStoreDB.Subscriptions;
@@ -23,9 +24,9 @@ public class EventStoreDBSubscriptionToAllOptions
 
 public class EventStoreDBSubscriptionToAll
 {
-    private readonly INoMediatorEventBus noMediatorEventBus;
     private readonly IProjectionPublisher projectionPublisher;
     private readonly EventStoreClient eventStoreClient;
+    private readonly IMediator _mediator;
     private readonly ISubscriptionCheckpointRepository checkpointRepository;
     private readonly ILogger<EventStoreDBSubscriptionToAll> logger;
     private EventStoreDBSubscriptionToAllOptions subscriptionOptions = default!;
@@ -35,15 +36,15 @@ public class EventStoreDBSubscriptionToAll
 
     public EventStoreDBSubscriptionToAll(
         EventStoreClient eventStoreClient,
-        INoMediatorEventBus noMediatorEventBus,
+        IMediator mediator,
         IProjectionPublisher projectionPublisher,
         ISubscriptionCheckpointRepository checkpointRepository,
         ILogger<EventStoreDBSubscriptionToAll> logger
     )
     {
-        this.noMediatorEventBus = noMediatorEventBus ?? throw new ArgumentNullException(nameof(noMediatorEventBus));
         this.projectionPublisher = projectionPublisher;
         this.eventStoreClient = eventStoreClient ?? throw new ArgumentNullException(nameof(eventStoreClient));
+        _mediator = mediator;
         this.checkpointRepository =
             checkpointRepository ?? throw new ArgumentNullException(nameof(checkpointRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -93,15 +94,12 @@ public class EventStoreDBSubscriptionToAll
                 logger.LogWarning("Couldn't deserialize event with id: {EventId}", resolvedEvent.Event.EventId);
 
                 if (!subscriptionOptions.IgnoreDeserializationErrors)
-                    throw new InvalidOperationException(
-                        $"Unable to deserialize event {resolvedEvent.Event.EventType} with id: {resolvedEvent.Event.EventId}"
-                    );
-
+                    throw new InvalidOperationException($"Unable to deserialize event {resolvedEvent.Event.EventType} with id: {resolvedEvent.Event.EventId}");
                 return;
             }
 
             // publish event to internal event bus
-            await noMediatorEventBus.Publish(streamEvent, ct);
+            await _mediator.Publish(streamEvent, ct);
 
             await projectionPublisher.PublishAsync(streamEvent, ct);
 
@@ -126,7 +124,7 @@ public class EventStoreDBSubscriptionToAll
             reason
         );
 
-        if (exception is RpcException { StatusCode: StatusCode.Cancelled })
+        if (exception is RpcException {StatusCode: StatusCode.Cancelled})
             return;
 
         Resubscribe();

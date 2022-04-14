@@ -1,5 +1,8 @@
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
+using BuildingBlocks.EventStoreDB;
+using BuildingBlocks.EventStoreDB.Core;
+using BuildingBlocks.EventStoreDB.OptimisticConcurrency;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
@@ -50,8 +53,8 @@ builder.Services.AddTransient<IEventMapper, EventMapper>();
 builder.Services.AddCustomMassTransit(typeof(ReservationRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
 builder.Services.AddTransient<AuthHeaderHandler>();
-
 SnowFlakIdGenerator.Configure(3);
+
 
 var app = builder.Build();
 
