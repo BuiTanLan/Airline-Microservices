@@ -73,7 +73,7 @@ builder.Services.AddCachingRequest(new List<Assembly>
 builder.Services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
 
 // EventStoreDB Configuration
-builder.Services.AddScoped<IEventStoreDBRepository<Flight.Flight.Models.Flight, long>, EventStoreDBRepository<Flight.Flight.Models.Flight, long>>();
+builder.Services.AddScoped<IEventStoreDBRepository<Flight.Flight.Models.Flight>, EventStoreDBRepository<Flight.Flight.Models.Flight>>();
 builder.Services.AddEventStore(configuration, typeof(FlightRoot).Assembly)
     .AddEventStoreDBSubscriptionToAll();
 

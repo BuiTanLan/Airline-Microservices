@@ -1,5 +1,4 @@
 ﻿using BuildingBlocks.EventStoreDB.Core.EventStoreDB;
-using BuildingBlocks.EventStoreDB.OptimisticConcurrency;
 using EventStore.Client;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -56,7 +55,7 @@ public static class CommandHandlerExtensions
             {
                 var eventStore = sp.GetRequiredService<EventStoreClient>();
 
-                setNextExpectedVersion ??= sp.GetRequiredService<EventStoreDBNextStreamRevisionProvider>().Set;
+                //setNextExpectedVersion ??= sp.GetRequiredService<EventStoreDBNextStreamRevisionProvider>().Set;
 
                 return async (command, ct) =>
                     setNextExpectedVersion(await HandleCreateCommand(eventStore, handle(sp), getId, command, ct));
@@ -88,12 +87,12 @@ public static class CommandHandlerExtensions
             {
                 var repository = sp.GetRequiredService<EventStoreClient>();
 
-                getExpectedVersion ??= () =>
-                    sp.GetRequiredService<EventStoreDBExpectedStreamRevisionProvider>().Value ??
-                    throw new ArgumentNullException("ETag", "Expected version not set");
-
-                setNextExpectedVersion ??=
-                    sp.GetRequiredService<EventStoreDBNextStreamRevisionProvider>().Set;
+                // getExpectedVersion ??= () =>
+                //     sp.GetRequiredService<EventStoreDBExpectedStreamRevisionProvider>().Value ??
+                //     throw new ArgumentNullException("ETag", "Expected version not set");
+                //
+                // setNextExpectedVersion ??=
+                //     sp.GetRequiredService<EventStoreDBNextStreamRevisionProvider>().Set;
 
                 return async (command, ct) =>
                     setNextExpectedVersion(

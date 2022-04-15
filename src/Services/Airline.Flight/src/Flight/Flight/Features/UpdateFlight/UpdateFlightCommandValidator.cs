@@ -1,11 +1,12 @@
+using Flight.Flight.Features.CreateFlight;
 using Flight.Flight.Models;
 using FluentValidation;
 
-namespace Flight.Flight.Features.CreateFlight;
+namespace Flight.Flight.Features.UpdateFlight;
 
-public class CreateFlightCommandValidator : AbstractValidator<CreateFlightCommand>
+public class UpdateFlightCommandValidator : AbstractValidator<CreateFlightCommand>
 {
-    public CreateFlightCommandValidator()
+    public UpdateFlightCommandValidator()
     {
         CascadeMode = CascadeMode.Stop;
 

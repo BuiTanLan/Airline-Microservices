@@ -3,9 +3,14 @@ using BuildingBlocks.Domain.Event;
 
 namespace BuildingBlocks.Domain.Model
 {
-    public abstract class BaseAggregateRoot<TId> : Entity<TId>, IAggregate<TId>
+    public abstract class BaseAggregateRoot : BaseAggregateRoot<long>
+    {
+    }
+
+    public abstract class BaseAggregateRoot<TId> : Entity, IAggregate
     {
         private readonly List<IDomainEvent> _domainEvents = new();
+        public long Id { get; protected set; }
         public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         public void AddDomainEvent(IDomainEvent domainEvent)
@@ -15,14 +20,14 @@ namespace BuildingBlocks.Domain.Model
 
         public IEvent[] ClearDomainEvents()
         {
-            var dequeuedEvents = _domainEvents.ToArray();
+            IEvent[] dequeuedEvents = _domainEvents.ToArray();
 
             _domainEvents.Clear();
 
             return dequeuedEvents;
         }
 
-        public int Version { get; protected set;}
+        public long Version { get; protected set; } = -1;
 
         public virtual void When(object @event) { }
     }

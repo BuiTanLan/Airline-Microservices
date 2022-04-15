@@ -1,7 +1,5 @@
-using System.ComponentModel;
 using System.Reflection;
-using BuildingBlocks.EventStoreDB.Events.NoMediator;
-using BuildingBlocks.EventStoreDB.OptimisticConcurrency;
+using BuildingBlocks.EventStoreDB.BackgroundWorkers;
 using BuildingBlocks.EventStoreDB.Projections;
 using BuildingBlocks.EventStoreDB.Subscriptions;
 using EventStore.Client;
@@ -24,23 +22,19 @@ public static class EventStoreDBConfigExtensions
 {
     private const string DefaultConfigKey = "EventStore";
 
-    public static IServiceCollection AddEventStoreDB(this IServiceCollection services, IConfiguration config, EventStoreDBOptions? options = null)
+    public static IServiceCollection AddEventStoreDB(this IServiceCollection services, IConfiguration config,
+        EventStoreDBOptions? options = null)
     {
         var eventStoreDBConfig = config.GetSection(DefaultConfigKey).Get<EventStoreDBConfig>();
 
         services
-             // .AddEventBus()
+            // .AddEventBus()
             .AddSingleton(new EventStoreClient(EventStoreClientSettings.Create("esdb://localhost:2113?tls=false")))
-            .AddScoped<EventStoreDBExpectedStreamRevisionProvider, EventStoreDBExpectedStreamRevisionProvider>()
-            .AddScoped<EventStoreDBNextStreamRevisionProvider, EventStoreDBNextStreamRevisionProvider>()
-            .AddScoped<EventStoreDBOptimisticConcurrencyScope, EventStoreDBOptimisticConcurrencyScope>()
             .AddTransient<EventStoreDBSubscriptionToAll, EventStoreDBSubscriptionToAll>();
 
         if (options?.UseInternalCheckpointing != false)
-        {
             services
                 .AddTransient<ISubscriptionCheckpointRepository, EventStoreDBSubscriptionCheckpointRepository>();
-        }
 
         return services;
     }
@@ -51,20 +45,18 @@ public static class EventStoreDBConfigExtensions
         bool checkpointToEventStoreDB = true)
     {
         if (checkpointToEventStoreDB)
-        {
             services
                 .AddTransient<ISubscriptionCheckpointRepository, EventStoreDBSubscriptionCheckpointRepository>();
-        }
 
         return services.AddHostedService(serviceProvider =>
             {
                 var logger =
-                    serviceProvider.GetRequiredService<ILogger<BuildingBlocks.EventStoreDB.BackgroundWorkers.BackgroundWorker>>();
+                    serviceProvider.GetRequiredService<ILogger<BackgroundWorker>>();
 
                 var eventStoreDBSubscriptionToAll =
                     serviceProvider.GetRequiredService<EventStoreDBSubscriptionToAll>();
 
-                return new BuildingBlocks.EventStoreDB.BackgroundWorkers.BackgroundWorker(
+                return new BackgroundWorker(
                     logger,
                     ct =>
                         eventStoreDBSubscriptionToAll.SubscribeToAll(
@@ -79,7 +71,7 @@ public static class EventStoreDBConfigExtensions
     public static IServiceCollection AddProjections(this IServiceCollection services, params Assembly[] assemblies)
     {
         services.AddSingleton<IProjectionPublisher, ProjectionPublisher>();
-        var assembliesToScan = assemblies.Any() ? assemblies : new[] { Assembly.GetEntryAssembly() };
+        var assembliesToScan = assemblies.Any() ? assemblies : new[] {Assembly.GetEntryAssembly()};
 
         RegisterProjections(services, assembliesToScan!);
 

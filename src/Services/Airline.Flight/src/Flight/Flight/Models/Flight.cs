@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 
 namespace Flight.Flight.Models;
 
-public class Flight : BaseAggregateRoot<long>
+public class Flight : BaseAggregateRoot
 {
     public string FlightNumber { get; private set; }
     public long AircraftId { get; private set; }
@@ -41,14 +41,30 @@ public class Flight : BaseAggregateRoot<long>
             Price = price
         };
 
-        var @event = new FlightCreatedDomainEvent(flight.Id, flight.FlightNumber, flight.AircraftId, flight.DepartureDate, flight.DepartureAirportId,
-            flight.ArriveDate, flight.ArriveAirportId, flight.DurationMinutes, flight.FlightDate, flight.Status, flight.Price);
+        var @event = new FlightCreatedDomainEvent(flight.Id, flight.FlightNumber, flight.AircraftId,
+            flight.DepartureDate, flight.DepartureAirportId,
+            flight.ArriveDate, flight.ArriveAirportId, flight.DurationMinutes, flight.FlightDate, flight.Status,
+            flight.Price);
 
         flight.AddDomainEvent(@event);
         flight.Apply(@event);
 
         return flight;
     }
+
+
+    public void Update(long id, string flightNumber, long aircraftId,
+        long departureAirportId, DateTime departureDate, DateTime arriveDate,
+        long arriveAirportId, decimal durationMinutes, DateTime flightDate, FlightStatus status,
+        decimal price)
+    {
+        var @event = new FlightUpdatedDomainEvent(id, flightNumber, aircraftId, departureDate, departureAirportId,
+            arriveDate, arriveAirportId, durationMinutes, flightDate, status, price);
+
+        AddDomainEvent(@event);
+        Apply(@event);
+    }
+
 
     public override void When(object @event)
     {
@@ -59,10 +75,32 @@ public class Flight : BaseAggregateRoot<long>
                 Apply(flightCreated);
                 return;
             }
+
+            case FlightUpdatedDomainEvent flightUpdated:
+            {
+                Apply(flightUpdated);
+                return;
+            }
         }
     }
 
     private void Apply(FlightCreatedDomainEvent @event)
+    {
+        Id = @event.Id;
+        FlightNumber = @event.FlightNumber;
+        Price = @event.Price;
+        Status = @event.Status;
+        AircraftId = @event.AircraftId;
+        DepartureAirportId = @event.DepartureAirportId;
+        DepartureDate = @event.DepartureDate;
+        ArriveAirportId = @event.ArriveAirportId;
+        ArriveDate = @event.ArriveDate;
+        DurationMinutes = @event.DurationMinutes;
+        FlightDate = @event.FlightDate;
+        Version++;
+    }
+
+    private void Apply(FlightUpdatedDomainEvent @event)
     {
         Id = @event.Id;
         FlightNumber = @event.FlightNumber;

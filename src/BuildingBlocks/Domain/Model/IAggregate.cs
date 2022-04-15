@@ -3,7 +3,7 @@ using BuildingBlocks.EventStoreDB.Core.Projections;
 
 namespace BuildingBlocks.Domain.Model
 {
-    public interface IAggregate : IAggregate<Guid>
+    public interface IAggregate : IAggregate<long>
     {
     }
 
@@ -12,6 +12,6 @@ namespace BuildingBlocks.Domain.Model
         T Id { get; }
         IReadOnlyList<IDomainEvent> DomainEvents { get; }
         IEvent[] ClearDomainEvents();
-        int Version { get; }
+        long Version => -1;
     }
 }

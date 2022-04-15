@@ -1,9 +1,5 @@
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
-using BuildingBlocks.EventStoreDB;
-using BuildingBlocks.EventStoreDB.Core;
-using BuildingBlocks.EventStoreDB.OptimisticConcurrency;
-using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
