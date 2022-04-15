@@ -1,6 +1,7 @@
 using System.Reflection;
 using BuildingBlocks.EventStoreDB.BackgroundWorkers;
 using BuildingBlocks.EventStoreDB.Projections;
+using BuildingBlocks.EventStoreDB.Repository;
 using BuildingBlocks.EventStoreDB.Subscriptions;
 using EventStore.Client;
 using Microsoft.Extensions.Configuration;
@@ -28,13 +29,12 @@ public static class EventStoreDBConfigExtensions
         var eventStoreDBConfig = config.GetSection(DefaultConfigKey).Get<EventStoreDBConfig>();
 
         services
-            // .AddEventBus()
-            .AddSingleton(new EventStoreClient(EventStoreClientSettings.Create("esdb://localhost:2113?tls=false")))
+            .AddSingleton(new EventStoreClient(EventStoreClientSettings.Create(eventStoreDBConfig.ConnectionString)))
+            .AddScoped(typeof(IEventStoreDBRepository<>), typeof(EventStoreDBRepository<>))
             .AddTransient<EventStoreDBSubscriptionToAll, EventStoreDBSubscriptionToAll>();
 
         if (options?.UseInternalCheckpointing != false)
-            services
-                .AddTransient<ISubscriptionCheckpointRepository, EventStoreDBSubscriptionCheckpointRepository>();
+            services.AddTransient<ISubscriptionCheckpointRepository, EventStoreDBSubscriptionCheckpointRepository>();
 
         return services;
     }
@@ -45,8 +45,7 @@ public static class EventStoreDBConfigExtensions
         bool checkpointToEventStoreDB = true)
     {
         if (checkpointToEventStoreDB)
-            services
-                .AddTransient<ISubscriptionCheckpointRepository, EventStoreDBSubscriptionCheckpointRepository>();
+            services.AddTransient<ISubscriptionCheckpointRepository, EventStoreDBSubscriptionCheckpointRepository>();
 
         return services.AddHostedService(serviceProvider =>
             {
@@ -68,16 +67,14 @@ public static class EventStoreDBConfigExtensions
         );
     }
 
-    public static IServiceCollection AddProjections(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection AddProjections(this IServiceCollection services, params Assembly[] assembliesToScan)
     {
         services.AddSingleton<IProjectionPublisher, ProjectionPublisher>();
-        var assembliesToScan = assemblies.Any() ? assemblies : new[] {Assembly.GetEntryAssembly()};
 
         RegisterProjections(services, assembliesToScan!);
 
         return services;
     }
-
 
     private static void RegisterProjections(IServiceCollection services, Assembly[] assembliesToScan)
     {

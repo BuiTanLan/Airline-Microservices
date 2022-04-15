@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using BuildingBlocks.EventStoreDB.Events.NoMediator;
+using BuildingBlocks.EventStoreDB.Repository;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +15,9 @@ public static class Configuration
         params Assembly[] assemblies
     )
     {
-        var assembliesToScan = (assemblies.Any() ? assemblies : new[] { Assembly.GetEntryAssembly()! });
+        var assembliesToScan = assemblies.Length > 0 ? assemblies : new[] { Assembly.GetEntryAssembly()! };
 
         return services
-            // .AddEventBus()
-            // .AddMediatR(assembliesToScan!)
             .AddEventStoreDB(configuration)
             .AddProjections(assembliesToScan);
     }
