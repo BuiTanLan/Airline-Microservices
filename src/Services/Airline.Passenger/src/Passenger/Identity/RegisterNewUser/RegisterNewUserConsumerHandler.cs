@@ -18,7 +18,7 @@ public class RegisterNewUserConsumerHandler : IConsumer<UserCreated>
     {
         Guard.Against.Null(context.Message, nameof(UserCreated));
 
-        var passenger = Passenger.Models.Passenger.Create(context.Message.Name, context.Message.PassportNumber, context.Message.Id);
+        var passenger = Passengers.Models.Passenger.Create(context.Message.Name, context.Message.PassportNumber, context.Message.Id);
 
         await _passengerDbContext.AddAsync(passenger);
 

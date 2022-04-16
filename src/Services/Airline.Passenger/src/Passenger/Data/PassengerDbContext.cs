@@ -11,7 +11,7 @@ public sealed class PassengerDbContext : AppDbContextBase
     {
     }
 
-    public DbSet<Passenger.Models.Passenger> Passengers => Set<Passenger.Models.Passenger>();
+    public DbSet<Passengers.Models.Passenger> Passengers => Set<Passengers.Models.Passenger>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

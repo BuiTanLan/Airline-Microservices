@@ -9,7 +9,7 @@ public static class RepositoryExtensions
         this IEventStoreDBRepository<T> repository,
         long id,
         CancellationToken cancellationToken
-    ) where T : class, IAggregate
+    ) where T : class, IAggregate<long>
     {
         var entity = await repository.Find(id, cancellationToken);
 
@@ -22,7 +22,7 @@ public static class RepositoryExtensions
         Action<T> action,
         long? expectedVersion = null,
         CancellationToken cancellationToken = default
-    ) where T : class, IAggregate
+    ) where T : class, IAggregate<long>
     {
         var entity = await repository.Get(id, cancellationToken);
 

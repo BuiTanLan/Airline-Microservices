@@ -60,28 +60,37 @@ namespace Reservation.Data.Migrations
                     b.ToTable("OutboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("Reservation.Reservation.Models.Reservation", b =>
+            modelBuilder.Entity("Reservation.Reservations.Models.Reservation", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int?>("LastModifiedBy")
                         .HasColumnType("int");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.ToTable("Reservation", "dbo");
                 });
 
-            modelBuilder.Entity("Reservation.Reservation.Models.Reservation", b =>
+            modelBuilder.Entity("Reservation.Reservations.Models.Reservation", b =>
                 {
-                    b.OwnsOne("Reservation.Reservation.Models.ValueObjects.PassengerInfo", "PassengerInfo", b1 =>
+                    b.OwnsOne("Reservation.Reservations.Models.ValueObjects.PassengerInfo", "PassengerInfo", b1 =>
                         {
                             b1.Property<long>("ReservationId")
                                 .HasColumnType("bigint");
@@ -97,7 +106,7 @@ namespace Reservation.Data.Migrations
                                 .HasForeignKey("ReservationId");
                         });
 
-                    b.OwnsOne("Reservation.Reservation.Models.ValueObjects.Trip", "Trip", b1 =>
+                    b.OwnsOne("Reservation.Reservations.Models.ValueObjects.Trip", "Trip", b1 =>
                         {
                             b1.Property<long>("ReservationId")
                                 .HasColumnType("bigint");

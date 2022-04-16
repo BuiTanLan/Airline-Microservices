@@ -3,7 +3,7 @@ using MagicOnion;
 using MagicOnion.Server;
 using Mapster;
 using MediatR;
-using Passenger.Passenger.Features.GetPassengerById;
+using Passenger.Passengers.Features.GetPassengerById;
 
 namespace Passenger.GrpcServer;
 

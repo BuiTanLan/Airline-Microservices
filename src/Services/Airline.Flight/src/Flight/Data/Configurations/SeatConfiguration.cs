@@ -1,12 +1,12 @@
-using Flight.Flight.Models;
+using Flight.Seats.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Flight.Data.Configurations;
 
-public class SeatConfiguration : IEntityTypeConfiguration<Flight.Models.Seat>
+public class SeatConfiguration : IEntityTypeConfiguration<Seat>
 {
-    public void Configure(EntityTypeBuilder<Flight.Models.Seat> builder)
+    public void Configure(EntityTypeBuilder<Seat> builder)
     {
         builder.ToTable("Seat", "dbo");
 
@@ -14,7 +14,7 @@ public class SeatConfiguration : IEntityTypeConfiguration<Flight.Models.Seat>
         builder.Property(r => r.Id).ValueGeneratedNever();
 
         builder
-            .HasOne<Flight.Models.Flight>()
+            .HasOne<Flights.Models.Flight>()
             .WithMany()
             .HasForeignKey(p => p.FlightId);
     }

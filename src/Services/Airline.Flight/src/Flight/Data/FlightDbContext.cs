@@ -1,5 +1,8 @@
 using System.Reflection;
 using BuildingBlocks.EFCore;
+using Flight.Aircrafts.Models;
+using Flight.Airports.Models;
+using Flight.Seats.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +14,10 @@ namespace Flight.Data
         {
         }
 
-        public DbSet<Flight.Models.Flight> Flights => Set<Flight.Models.Flight>();
-        public DbSet<Airport.Models.Airport> Airports => Set<Airport.Models.Airport>();
-        public DbSet<Aircraft.Models.Aircraft> Aircraft => Set<Aircraft.Models.Aircraft>();
-        public DbSet<Flight.Models.Seat> Seats => Set<Flight.Models.Seat>();
+        public DbSet<Flights.Models.Flight> Flights => Set<Flights.Models.Flight>();
+        public DbSet<Airport> Airports => Set<Airport>();
+        public DbSet<Aircraft> Aircraft => Set<Aircraft>();
+        public DbSet<Seat> Seats => Set<Seat>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

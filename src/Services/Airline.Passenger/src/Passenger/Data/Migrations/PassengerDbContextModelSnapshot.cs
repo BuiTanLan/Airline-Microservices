@@ -60,7 +60,7 @@ namespace Passenger.Data.Migrations
                     b.ToTable("OutboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("Passenger.Passenger.Models.Passenger", b =>
+            modelBuilder.Entity("Passenger.Passengers.Models.Passenger", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -68,13 +68,19 @@ namespace Passenger.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int?>("LastModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -85,6 +91,9 @@ namespace Passenger.Data.Migrations
 
                     b.Property<string>("PassportNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Version")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 

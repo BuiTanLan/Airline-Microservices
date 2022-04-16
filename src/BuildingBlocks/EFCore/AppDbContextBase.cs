@@ -37,7 +37,7 @@ public abstract class AppDbContextBase : DbContext, IDbContext
     {
         try
         {
-            OnBeforeSaving();
+            //OnBeforeSaving();
             await SaveChangesAsync(cancellationToken);
             await _currentTransaction?.CommitAsync(cancellationToken)!;
         }

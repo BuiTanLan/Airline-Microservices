@@ -12,6 +12,6 @@ namespace BuildingBlocks.Domain.Model
         T Id { get; }
         IReadOnlyList<IDomainEvent> DomainEvents { get; }
         IEvent[] ClearDomainEvents();
-        long Version => -1;
+        long Version { get; }
     }
 }

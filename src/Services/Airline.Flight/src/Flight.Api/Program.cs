@@ -20,7 +20,6 @@ using BuildingBlocks.Web;
 using Figgle;
 using Flight;
 using Flight.Data;
-using Flight.Data.Seed;
 using Flight.Extensions;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;

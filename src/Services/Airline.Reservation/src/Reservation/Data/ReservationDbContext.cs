@@ -11,7 +11,7 @@ public class ReservationDbContext : AppDbContextBase
     {
     }
 
-    public DbSet<Reservation.Models.Reservation> Reservations => Set<Reservation.Models.Reservation>();
+    public DbSet<Reservations.Models.Reservation> Reservations => Set<Reservations.Models.Reservation>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

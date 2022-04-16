@@ -15,15 +15,6 @@ public class StreamNameMapper
     {
         Instance.TypeNameMap.AddOrUpdate(streamType, mappedStreamName, (_, _) => mappedStreamName);
     }
-
-    public static string ToStreamPrefix<TStream>() => ToStreamPrefix(typeof(TStream));
-
-    public static string ToStreamPrefix(Type streamType) => Instance.TypeNameMap.GetOrAdd(streamType, _ =>
-    {
-        var modulePrefix = streamType.Namespace!.Split(".").First();
-        return $"{modulePrefix}_{streamType.Name}";
-    });
-
     public static string ToStreamId<TStream>(object aggregateId, object? tenantId = null) =>
         ToStreamId(typeof(TStream), aggregateId);
 
@@ -31,7 +22,7 @@ public class StreamNameMapper
     {
         var tenantPrefix = tenantId != null ? $"{tenantId}_"  : "";
 
-        return $"{tenantPrefix}{ToStreamPrefix(streamType)}-{aggregateId}";
+        return $"{tenantPrefix}{streamType.Name}-{aggregateId}";
     }
 
 }

@@ -60,25 +60,31 @@ namespace Flight.Data.Migrations
                     b.ToTable("OutboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("Flight.Aircraft.Models.Aircraft", b =>
+            modelBuilder.Entity("Flight.Aircrafts.Models.Aircraft", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("LastModifiedBy")
+                        .HasColumnType("int");
 
                     b.Property<int>("ManufacturingYear")
                         .HasColumnType("int");
 
                     b.Property<string>("Model")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -91,7 +97,7 @@ namespace Flight.Data.Migrations
                     b.ToTable("Aircraft", "dbo");
                 });
 
-            modelBuilder.Entity("Flight.Airport.Models.Airport", b =>
+            modelBuilder.Entity("Flight.Airports.Models.Airport", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -102,13 +108,19 @@ namespace Flight.Data.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int?>("LastModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -122,7 +134,7 @@ namespace Flight.Data.Migrations
                     b.ToTable("Airport", "dbo");
                 });
 
-            modelBuilder.Entity("Flight.Flight.Models.Flight", b =>
+            modelBuilder.Entity("Flight.Flights.Models.Flight", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
@@ -135,6 +147,12 @@ namespace Flight.Data.Migrations
 
                     b.Property<DateTime>("ArriveDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<long>("DepartureAirportId")
                         .HasColumnType("bigint");
@@ -154,10 +172,10 @@ namespace Flight.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int?>("LastModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -178,12 +196,18 @@ namespace Flight.Data.Migrations
                     b.ToTable("Flight", "dbo");
                 });
 
-            modelBuilder.Entity("Flight.Flight.Models.Seat", b =>
+            modelBuilder.Entity("Flight.Seats.Models.Seat", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Class")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
                     b.Property<long>("FlightId")
@@ -192,10 +216,10 @@ namespace Flight.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ModifiedBy")
+                    b.Property<int?>("LastModifiedBy")
                         .HasColumnType("int");
 
                     b.Property<string>("SeatNumber")
@@ -214,24 +238,24 @@ namespace Flight.Data.Migrations
                     b.ToTable("Seat", "dbo");
                 });
 
-            modelBuilder.Entity("Flight.Flight.Models.Flight", b =>
+            modelBuilder.Entity("Flight.Flights.Models.Flight", b =>
                 {
-                    b.HasOne("Flight.Aircraft.Models.Aircraft", null)
+                    b.HasOne("Flight.Aircrafts.Models.Aircraft", null)
                         .WithMany()
                         .HasForeignKey("AircraftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Flight.Airport.Models.Airport", null)
+                    b.HasOne("Flight.Airports.Models.Airport", null)
                         .WithMany()
                         .HasForeignKey("ArriveAirportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Flight.Flight.Models.Seat", b =>
+            modelBuilder.Entity("Flight.Seats.Models.Seat", b =>
                 {
-                    b.HasOne("Flight.Flight.Models.Flight", null)
+                    b.HasOne("Flight.Flights.Models.Flight", null)
                         .WithMany()
                         .HasForeignKey("FlightId")
                         .OnDelete(DeleteBehavior.Cascade)

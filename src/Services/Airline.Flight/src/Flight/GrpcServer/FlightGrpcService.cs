@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using BuildingBlocks.Contracts.Grpc;
-using Flight.Flight.Features.GetFlightById;
-using Flight.Seat.Features.GetAvailableSeats;
-using Flight.Seat.Features.ReserveSeat;
+using Flight.Flights.Features.GetFlightById;
+using Flight.Seats.Features.GetAvailableSeats;
+using Flight.Seats.Features.ReserveSeat;
 using MagicOnion;
 using MagicOnion.Server;
 using Mapster;

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Reservation.Data.Configurations;
 
-public class ReservationConfiguration : IEntityTypeConfiguration<Reservation.Models.Reservation>
+public class ReservationConfiguration : IEntityTypeConfiguration<Reservations.Models.Reservation>
 {
-    public void Configure(EntityTypeBuilder<Reservation.Models.Reservation> builder)
+    public void Configure(EntityTypeBuilder<Reservations.Models.Reservation> builder)
     {
         builder.ToTable("Reservation", "dbo");
 

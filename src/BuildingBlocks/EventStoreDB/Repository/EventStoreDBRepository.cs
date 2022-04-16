@@ -5,7 +5,7 @@ using EventStore.Client;
 
 namespace BuildingBlocks.EventStoreDB.Repository;
 
-public interface IEventStoreDBRepository<T> where T : class, IAggregate
+public interface IEventStoreDBRepository<T> where T : class, IAggregate<long>
 {
     Task<T?> Find(long id, CancellationToken cancellationToken);
     Task<ulong> Add(T aggregate, CancellationToken cancellationToken);
@@ -13,7 +13,7 @@ public interface IEventStoreDBRepository<T> where T : class, IAggregate
     Task<ulong> Delete(T aggregate, long? expectedRevision = null, CancellationToken cancellationToken = default);
 }
 
-public class EventStoreDBRepository<T>: IEventStoreDBRepository<T> where T : class, IAggregate
+public class EventStoreDBRepository<T>: IEventStoreDBRepository<T> where T : class, IAggregate<long>
 {
     private readonly EventStoreClient eventStore;
 

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Passenger.Data.Configurations;
 
-public class PassengerConfiguration: IEntityTypeConfiguration<Passenger.Models.Passenger>
+public class PassengerConfiguration: IEntityTypeConfiguration<Passengers.Models.Passenger>
 {
-    public void Configure(EntityTypeBuilder<Passenger.Models.Passenger> builder)
+    public void Configure(EntityTypeBuilder<Passengers.Models.Passenger> builder)
     {
         builder.ToTable("Passenger", "dbo");
 
