@@ -1,10 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using BuildingBlocks.EventStoreDB.Repository;
 using Flight.Airports.Dtos;
 using Flight.Airports.Exceptions;
-using Flight.Airports.Models;
 using Flight.Data;
 using MapsterMapper;
 using MediatR;
@@ -12,30 +10,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Flight.Airports.Features.CreateAirport;
 
-public class CreateAirportCommandHandler : IRequestHandler<CreateAirportCommand, ulong>
+public class CreateAirportCommandHandler : IRequestHandler<CreateAirportCommand, AirportResponseDto>
 {
-    private readonly IEventStoreDBRepository<Airport> _eventStoreDbRepository;
+    private readonly FlightDbContext _flightDbContext;
+    private readonly IMapper _mapper;
 
-    public CreateAirportCommandHandler(IEventStoreDBRepository<Airport> eventStoreDbRepository)
+    public CreateAirportCommandHandler(IMapper mapper, FlightDbContext flightDbContext)
     {
-        _eventStoreDbRepository = eventStoreDbRepository;
+        _mapper = mapper;
+        _flightDbContext = flightDbContext;
     }
 
-    public async Task<ulong> Handle(CreateAirportCommand command, CancellationToken cancellationToken)
+    public async Task<AirportResponseDto> Handle(CreateAirportCommand command, CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
 
-        var airport = await _eventStoreDbRepository.Find(command.Id, cancellationToken);
+        var airport = await _flightDbContext.Airports.SingleOrDefaultAsync(x => x.Code == command.Code, cancellationToken);
 
-        if (airport is not null && !airport.IsDeleted)
+        if (airport is not null)
             throw new AirportAlreadyExistException();
 
-        var aggrigate = Airport.Create(command.Id, command.Name, command.Address, command.Code);
+        var airportEntity = Models.Airport.Create(command.Id, command.Name, command.Code, command.Address);
 
-        var result = await _eventStoreDbRepository.Add(
-            aggrigate,
-            cancellationToken);
+        var newAirport = await _flightDbContext.Airports.AddAsync(airportEntity, cancellationToken);
 
-        return result;
+        await _flightDbContext.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<AirportResponseDto>(newAirport.Entity);
     }
 }

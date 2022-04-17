@@ -43,7 +43,6 @@ public class Flight : Aggregate<long>
             flight.Price);
 
         flight.AddDomainEvent(@event);
-        flight.Apply(@event);
 
         return flight;
     }
@@ -58,57 +57,5 @@ public class Flight : Aggregate<long>
             arriveDate, arriveAirportId, durationMinutes, flightDate, status, price);
 
         AddDomainEvent(@event);
-        Apply(@event);
-    }
-
-
-    public override void When(object @event)
-    {
-        switch (@event)
-        {
-            case FlightCreatedDomainEvent flightCreated:
-            {
-                Apply(flightCreated);
-                return;
-            }
-
-            case FlightUpdatedDomainEvent flightUpdated:
-            {
-                Apply(flightUpdated);
-                return;
-            }
-        }
-    }
-
-    private void Apply(FlightCreatedDomainEvent @event)
-    {
-        Id = @event.Id;
-        FlightNumber = @event.FlightNumber;
-        Price = @event.Price;
-        Status = @event.Status;
-        AircraftId = @event.AircraftId;
-        DepartureAirportId = @event.DepartureAirportId;
-        DepartureDate = @event.DepartureDate;
-        ArriveAirportId = @event.ArriveAirportId;
-        ArriveDate = @event.ArriveDate;
-        DurationMinutes = @event.DurationMinutes;
-        FlightDate = @event.FlightDate;
-        Version++;
-    }
-
-    private void Apply(FlightUpdatedDomainEvent @event)
-    {
-        Id = @event.Id;
-        FlightNumber = @event.FlightNumber;
-        Price = @event.Price;
-        Status = @event.Status;
-        AircraftId = @event.AircraftId;
-        DepartureAirportId = @event.DepartureAirportId;
-        DepartureDate = @event.DepartureDate;
-        ArriveAirportId = @event.ArriveAirportId;
-        ArriveDate = @event.ArriveDate;
-        DurationMinutes = @event.DurationMinutes;
-        FlightDate = @event.FlightDate;
-        Version++;
     }
 }

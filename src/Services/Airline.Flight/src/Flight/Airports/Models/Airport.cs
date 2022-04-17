@@ -31,29 +31,7 @@ public class Airport : Aggregate<long>
             airport.Code);
 
         airport.AddDomainEvent(@event);
-        airport.Apply(@event);
 
         return airport;
-    }
-
-    public override void When(object @event)
-    {
-        switch (@event)
-        {
-            case AirportCreatedDomainEvent airportCreated:
-            {
-                Apply(airportCreated);
-                return;
-            }
-        }
-    }
-
-    private void Apply(AirportCreatedDomainEvent @event)
-    {
-        Id = @event.Id;
-        Name = @event.Name;
-        Address = @event.Address;
-        Code = @event.Code;
-        Version++;
     }
 }

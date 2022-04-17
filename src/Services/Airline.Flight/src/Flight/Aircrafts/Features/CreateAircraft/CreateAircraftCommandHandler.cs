@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using BuildingBlocks.EventStoreDB.Repository;
 using Flight.Aircrafts.Dtos;
 using Flight.Aircrafts.Exceptions;
 using Flight.Aircrafts.Models;
@@ -12,30 +11,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Flight.Aircrafts.Features.CreateAircraft;
 
-public class CreateAircraftCommandHandler : IRequestHandler<CreateAircraftCommand, ulong>
+public class CreateAircraftCommandHandler : IRequestHandler<CreateAircraftCommand, AircraftResponseDto>
 {
-    private readonly IEventStoreDBRepository<Aircraft> _eventStoreDbRepository;
+    private readonly FlightDbContext _flightDbContext;
+    private readonly IMapper _mapper;
 
-    public CreateAircraftCommandHandler(IEventStoreDBRepository<Aircraft> eventStoreDbRepository)
+    public CreateAircraftCommandHandler(IMapper mapper, FlightDbContext flightDbContext)
     {
-        _eventStoreDbRepository = eventStoreDbRepository;
+        _mapper = mapper;
+        _flightDbContext = flightDbContext;
     }
 
-    public async Task<ulong> Handle(CreateAircraftCommand command, CancellationToken cancellationToken)
+    public async Task<AircraftResponseDto> Handle(CreateAircraftCommand command, CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
 
-        var aircraft = await _eventStoreDbRepository.Find(command.Id, cancellationToken);
+        var aircraft = await _flightDbContext.Aircraft.SingleOrDefaultAsync(x => x.Model == command.Model, cancellationToken);
 
-        if (aircraft is not null && !aircraft.IsDeleted)
+        if (aircraft is not null)
             throw new AircraftAlreadyExistException();
 
-        var aggrigate = Aircraft.Create(command.Id, command.Name, command.Model, command.ManufacturingYear);
+        var aircraftEntity = Aircraft.Create(command.Id, command.Name, command.Model, command.ManufacturingYear);
 
-        var result = await _eventStoreDbRepository.Add(
-            aggrigate,
-            cancellationToken);
+        var newAircraft = await _flightDbContext.Aircraft.AddAsync(aircraftEntity, cancellationToken);
 
-        return result;
+        await _flightDbContext.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<AircraftResponseDto>(newAircraft.Entity);
     }
 }

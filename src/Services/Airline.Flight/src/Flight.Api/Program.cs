@@ -2,9 +2,6 @@ using System.Reflection;
 using BuildingBlocks.Caching;
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
-using BuildingBlocks.EventStoreDB;
-using BuildingBlocks.EventStoreDB.Core;
-using BuildingBlocks.EventStoreDB.Repository;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
@@ -20,6 +17,7 @@ using BuildingBlocks.Web;
 using Figgle;
 using Flight;
 using Flight.Data;
+using Flight.Data.Seed;
 using Flight.Extensions;
 using FluentValidation;
 using Hellang.Middleware.ProblemDetails;
@@ -70,11 +68,6 @@ builder.Services.AddCachingRequest(new List<Assembly>
 });
 
 builder.Services.AddEasyCaching(options => { options.UseInMemory(configuration, "mem"); });
-
-// EventStoreDB Configuration
-builder.Services.AddEventStore(configuration, typeof(FlightRoot).Assembly)
-    .AddEventStoreDBSubscriptionToAll();
-
 
 var app = builder.Build();
 

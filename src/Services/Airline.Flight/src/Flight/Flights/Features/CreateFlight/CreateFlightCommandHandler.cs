@@ -1,40 +1,42 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
-using BuildingBlocks.EventStoreDB.Repository;
+using Flight.Data;
+using Flight.Flights.Dtos;
 using Flight.Flights.Exceptions;
 using Flight.Flights.Models;
+using MapsterMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Flight.Flights.Features.CreateFlight;
 
-public class CreateFlightCommandHandler : IRequestHandler<CreateFlightCommand, ulong>
+public class CreateFlightCommandHandler : IRequestHandler<CreateFlightCommand, FlightResponseDto>
 {
-    private readonly IEventStoreDBRepository<Models.Flight> _eventStoreDbRepository;
+    private readonly FlightDbContext _flightDbContext;
+    private readonly IMapper _mapper;
 
-    public CreateFlightCommandHandler(IEventStoreDBRepository<Models.Flight> eventStoreDbRepository)
+    public CreateFlightCommandHandler(IMapper mapper, FlightDbContext flightDbContext)
     {
-        _eventStoreDbRepository = eventStoreDbRepository;
+        _mapper = mapper;
+        _flightDbContext = flightDbContext;
     }
 
-    public async Task<ulong> Handle(CreateFlightCommand command, CancellationToken cancellationToken)
+    public async Task<FlightResponseDto> Handle(CreateFlightCommand command, CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
 
-        var flight = await _eventStoreDbRepository.Find(command.Id, cancellationToken);
-
-        if (flight is not null && !flight.IsDeleted)
-            throw new FlightAlreadyExistException();
-
-        var aggrigate = Models.Flight.Create(command.Id, command.FlightNumber, command.AircraftId,
-            command.DepartureAirportId, command.DepartureDate,
-            command.ArriveDate, command.ArriveAirportId, command.DurationMinutes, command.FlightDate,
-            FlightStatus.Completed, command.Price);
-
-        var result = await _eventStoreDbRepository.Add(
-            aggrigate,
+        var flight = await _flightDbContext.Flights.SingleOrDefaultAsync(x => x.FlightNumber == command.FlightNumber && !x.IsDeleted,
             cancellationToken);
 
-        return result;
+        if (flight is not null)
+            throw new FlightAlreadyExistException();
+
+        var flightEntity = Models.Flight.Create(command.Id, command.FlightNumber, command.AircraftId, command.DepartureAirportId, command.DepartureDate,
+            command.ArriveDate, command.ArriveAirportId, command.DurationMinutes, command.FlightDate, FlightStatus.Completed, command.Price);
+
+        var newFlight = await _flightDbContext.Flights.AddAsync(flightEntity, cancellationToken);
+
+        return _mapper.Map<FlightResponseDto>(newFlight.Entity);
     }
 }

@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Contracts.Grpc;
+using BuildingBlocks.EventStoreDB.Repository;
 using Grpc.Net.Client;
 using MagicOnion.Client;
 using MapsterMapper;
@@ -13,33 +14,30 @@ using Reservation.Reservations.Models.ValueObjects;
 
 namespace Reservation.Reservations.Features.CreateReservation;
 
-public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand, ReservationResponseDto>
+public class CreateReservationCommandHandler : IRequestHandler<CreateReservationCommand, ulong>
 {
-    private readonly ReservationDbContext _reservationDbContext;
     private readonly IMapper _mapper;
+    private readonly IEventStoreDBRepository<Models.Reservation> _eventStoreDbRepository;
     private readonly IFlightGrpcService _flightGrpcService;
     private readonly IPassengerGrpcService _passengerGrpcService;
 
 
     public CreateReservationCommandHandler(
+        IOptions<GrpcOptions> grpcOptions,
         IMapper mapper,
-        ReservationDbContext reservationDbContext,
-        IOptions<GrpcOptions> grpcOptions)
+        IEventStoreDBRepository<Models.Reservation> eventStoreDbRepository)
     {
         _mapper = mapper;
-        _reservationDbContext = reservationDbContext;
+        _eventStoreDbRepository = eventStoreDbRepository;
 
         var channelFlight = GrpcChannel.ForAddress(grpcOptions.Value.FlightAddress);
-        _flightGrpcService =
-            new Lazy<IFlightGrpcService>(() => MagicOnionClient.Create<IFlightGrpcService>(channelFlight)).Value;
+        _flightGrpcService = new Lazy<IFlightGrpcService>(() => MagicOnionClient.Create<IFlightGrpcService>(channelFlight)).Value;
 
         var channelPassenger = GrpcChannel.ForAddress(grpcOptions.Value.PassengerAddress);
-        _passengerGrpcService =
-            new Lazy<IPassengerGrpcService>(() => MagicOnionClient.Create<IPassengerGrpcService>(channelPassenger))
-                .Value;
+        _passengerGrpcService = new Lazy<IPassengerGrpcService>(() => MagicOnionClient.Create<IPassengerGrpcService>(channelPassenger)).Value;
     }
 
-    public async Task<ReservationResponseDto> Handle(CreateReservationCommand command,
+    public async Task<ulong> Handle(CreateReservationCommand command,
         CancellationToken cancellationToken)
     {
         Guard.Against.Null(command, nameof(command));
@@ -51,7 +49,12 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
 
         var emptySeat = (await _flightGrpcService.GetAvailableSeats(command.FlightId))?.First();
 
-        var reservationEntity = Models.Reservation.Create(new PassengerInfo(passenger.Name), new Trip(
+        var reservation = await _eventStoreDbRepository.Find(command.Id, cancellationToken);
+
+        if (reservation is not null && !reservation.IsDeleted)
+            throw new ReservationAlreadyExistException();
+
+        var aggrigate = Models.Reservation.Create(command.Id, new PassengerInfo(passenger.Name), new Trip(
             flight.FlightNumber, flight.AircraftId, flight.DepartureAirportId,
             flight.ArriveAirportId, flight.FlightDate, flight.Price, command.Description, emptySeat?.SeatNumber));
 
@@ -60,9 +63,10 @@ public class CreateReservationCommandHandler : IRequestHandler<CreateReservation
             FlightId = flight.Id, SeatNumber = emptySeat?.SeatNumber
         });
 
-        var newReservation =
-            await _reservationDbContext.Reservations.AddAsync(reservationEntity, cancellationToken);
+        var result = await _eventStoreDbRepository.Add(
+            aggrigate,
+            cancellationToken);
 
-        return _mapper.Map<ReservationResponseDto>(newReservation.Entity);
+        return result;
     }
 }

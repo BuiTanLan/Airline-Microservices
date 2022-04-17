@@ -31,29 +31,7 @@ public class Aircraft : Aggregate<long>
             aircraft.ManufacturingYear);
 
         aircraft.AddDomainEvent(@event);
-        aircraft.Apply(@event);
 
         return aircraft;
-    }
-
-    public override void When(object @event)
-    {
-        switch (@event)
-        {
-            case AircraftCreatedDomainEvent aircraftCreated:
-            {
-                Apply(aircraftCreated);
-                return;
-            }
-        }
-    }
-
-    private void Apply(AircraftCreatedDomainEvent @event)
-    {
-        Id = @event.Id;
-        Name = @event.Name;
-        Model = @event.Model;
-        ManufacturingYear = @event.ManufacturingYear;
-        Version++;
     }
 }

@@ -1,5 +1,7 @@
 using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
+using BuildingBlocks.EventStoreDB;
+using BuildingBlocks.EventStoreDB.Core;
 using BuildingBlocks.IdsGenerator;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
@@ -51,6 +53,9 @@ builder.Services.AddCustomOpenTelemetry();
 builder.Services.AddTransient<AuthHeaderHandler>();
 SnowFlakIdGenerator.Configure(3);
 
+// EventStoreDB Configuration
+builder.Services.AddEventStore(configuration, typeof(ReservationRoot).Assembly)
+    .AddEventStoreDBSubscriptionToAll();
 
 var app = builder.Build();
 
