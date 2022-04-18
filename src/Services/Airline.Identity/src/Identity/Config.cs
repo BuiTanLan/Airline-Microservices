@@ -16,7 +16,7 @@ public static class Config
             new IdentityResources.Address(),
             new(Constants.StandardScopes.Roles, new List<string> {"role"})
         };
-    
+
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
@@ -34,7 +34,7 @@ public static class Config
             new(Constants.StandardScopes.PassengerApi),
             new(Constants.StandardScopes.ReservationApi)
         };
-    
+
     public static IEnumerable<Client> Clients =>
         new List<Client>
         {
@@ -42,7 +42,7 @@ public static class Config
             {
                 ClientId = "client",
 
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
                 ClientSecrets =
                 {

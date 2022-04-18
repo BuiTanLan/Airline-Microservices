@@ -19,6 +19,7 @@ public static class JwtExtensions
             });
 
         if (!string.IsNullOrEmpty(jwtOptions.Audience))
+        {
             services.AddAuthorization(options =>
                 options.AddPolicy(nameof(ApiScope), policy =>
                 {
@@ -26,6 +27,7 @@ public static class JwtExtensions
                     policy.RequireClaim("scope", jwtOptions.Audience);
                 })
             );
+        }
 
         return services;
     }

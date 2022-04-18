@@ -19,9 +19,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Identity.Data;
 
-public sealed class IdentityContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int,
-    IdentityUserClaim<int>,
-    IdentityUserRole<int>, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>, IDbContext
+public sealed class IdentityContext : IdentityDbContext<ApplicationUser, IdentityRole<long>, long,
+    IdentityUserClaim<long>,
+    IdentityUserRole<long>, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>, IDbContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 

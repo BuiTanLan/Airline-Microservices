@@ -11,7 +11,7 @@ public static class IdentityServerExtensions
 {
     public static IServiceCollection AddIdentityServer(this IServiceCollection services, IWebHostEnvironment env)
     {
-        services.AddIdentity<ApplicationUser, IdentityRole<int>>(config =>
+        services.AddIdentity<ApplicationUser, IdentityRole<long>>(config =>
             {
                 config.Password.RequiredLength = 6;
                 config.Password.RequireDigit = false;
@@ -32,14 +32,14 @@ public static class IdentityServerExtensions
             .AddInMemoryApiResources(Config.ApiResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
-            .AddAspNetIdentity<ApplicationUser>();
+            .AddAspNetIdentity<ApplicationUser>()
+            .AddResourceOwnerValidator<UserValidator>();
 
         if (env.IsDevelopment())
         {
             identityServerBuilder.AddDeveloperSigningCredential();
         }
+
         return services;
     }
-
 }
-

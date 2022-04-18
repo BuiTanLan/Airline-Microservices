@@ -46,7 +46,6 @@ builder.Services.AddValidatorsFromAssembly(typeof(FlightRoot).Assembly);
 builder.Services.AddCustomProblemDetails();
 builder.Services.AddCustomMapster(typeof(FlightRoot).Assembly);
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddTransient<IEventMapper, EventMapper>();
 
 builder.Services.AddCustomMassTransit(typeof(FlightRoot).Assembly);

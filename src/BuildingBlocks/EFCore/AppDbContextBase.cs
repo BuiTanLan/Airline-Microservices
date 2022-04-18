@@ -1,9 +1,9 @@
 using System.Collections.Immutable;
 using System.Data;
 using System.Reflection;
+using System.Security.Claims;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.Domain.Model;
-using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -37,7 +37,7 @@ public abstract class AppDbContextBase : DbContext, IDbContext
     {
         try
         {
-            //OnBeforeSaving();
+            OnBeforeSaving();
             await SaveChangesAsync(cancellationToken);
             await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
@@ -87,24 +87,26 @@ public abstract class AppDbContextBase : DbContext, IDbContext
     // https://www.meziantou.net/entity-framework-core-soft-delete-using-query-filters.htm
     private void OnBeforeSaving()
     {
-        var now = DateTime.Now;
-        // var userId = Convert.ToInt32(_httpContextAccessor?.HttpContext?.User?.Identity?.GetSubjectId());
+        var claimName = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        foreach (var entry in ChangeTracker.Entries())
+        long.TryParse(claimName, out var userId);
+
+        foreach (var entry in ChangeTracker.Entries<IAuditable>())
         {
-            bool isAggrigate = entry.Entity.GetType().IsAssignableTo(typeof(IAggregate));
+            bool isAuditable = entry.Entity.GetType().IsAssignableTo(typeof(IAuditable));
 
-            if (isAggrigate)
+            if (isAuditable)
             {
                 switch (entry.State)
                 {
-                    case EntityState.Modified:
-                        entry.CurrentValues["LastModified"] = now;
-                        // entry.CurrentValues["LastModifiedBy"] = userId;
-                        break;
                     case EntityState.Added:
-                        entry.CurrentValues["LastModified"] = now;
-                        // entry.CurrentValues["LastModifiedBy"] = userId;
+                        entry.Entity.CreatedBy = userId;
+                        entry.Entity.CreatedAt = DateTime.Now;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedBy = userId;
+                        entry.Entity.LastModified = DateTime.Now;
                         break;
                 }
             }

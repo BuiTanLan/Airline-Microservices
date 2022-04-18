@@ -8,6 +8,6 @@ namespace Flight.Flights.Features.GetAvailableFlights;
 
 public record GetAvailableFlightsQuery : IRequest<IEnumerable<FlightResponseDto>>, ICacheRequest
 {
-    public string CacheKey { set; get; } = "GetAvailableFlightsQuery";
-    public DateTime? AbsoluteExpirationRelativeToNow { set; get; } = DateTime.Now.AddHours(1);
+    public string CacheKey => "GetAvailableFlightsQuery";
+    public DateTime? AbsoluteExpirationRelativeToNow => DateTime.Now.AddHours(1);
 }

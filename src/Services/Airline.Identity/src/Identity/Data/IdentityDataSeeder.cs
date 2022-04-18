@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BuildingBlocks.Persistence;
 using Identity.Identity.Models;
@@ -7,10 +8,10 @@ namespace Identity.Data;
 
 public class IdentityDataSeeder : IDataSeeder
 {
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
+    private readonly RoleManager<IdentityRole<long>> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
 
-    public IdentityDataSeeder(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager)
+    public IdentityDataSeeder(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<long>> roleManager)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -40,12 +41,13 @@ public class IdentityDataSeeder : IDataSeeder
                 FirstName = "Meysam",
                 LastName = "Hadeli",
                 UserName = "meysamh",
-                Email = "meysam@test.com"
+                Email = "meysam@test.com",
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
             var result = await _userManager.CreateAsync(user, "Admin@123456");
 
-            if (result.Succeeded) 
+            if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, Constants.Role.Admin);
         }
 
@@ -56,12 +58,13 @@ public class IdentityDataSeeder : IDataSeeder
                 FirstName = "Meysam",
                 LastName = "Hadeli",
                 UserName = "meysamh2",
-                Email = "meysam2@test.com"
+                Email = "meysam2@test.com",
+                SecurityStamp = Guid.NewGuid().ToString()
             };
-        
+
             var result = await _userManager.CreateAsync(user, "User@123456");
-        
-            if (result.Succeeded) 
+
+            if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, Constants.Role.User);
         }
     }
