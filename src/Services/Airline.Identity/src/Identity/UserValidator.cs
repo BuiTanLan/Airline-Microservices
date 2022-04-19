@@ -23,16 +23,25 @@ public class UserValidator : IResourceOwnerPasswordValidator
     {
         var user = await _userManager.FindByNameAsync(context.UserName);
 
-        var signIn = await _signInManager.PasswordSignInAsync(user,
-            context.Password, true, lockoutOnFailure: true);
+        var signIn = await _signInManager.PasswordSignInAsync(
+            user,
+            context.Password,
+            isPersistent: true,
+            lockoutOnFailure: true);
 
         if (signIn.Succeeded)
         {
+            var userId = user!.Id.ToString();
+
             // context set to success
             context.Result = new GrantValidationResult(
-                subject: user?.Id.ToString(),
+                subject: userId,
                 authenticationMethod: "custom",
-                claims: new Claim[] { new Claim(ClaimTypes.NameIdentifier, user!.UserName) }
+                claims: new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, userId),
+                    new Claim(ClaimTypes.Name, user.UserName)
+                }
             );
 
             return;
@@ -40,6 +49,6 @@ public class UserValidator : IResourceOwnerPasswordValidator
 
         // context set to Failure
         context.Result = new GrantValidationResult(
-            TokenRequestErrors.UnauthorizedClient, "Invalid Crdentials");
+            TokenRequestErrors.UnauthorizedClient, "Invalid Credentials");
     }
 }

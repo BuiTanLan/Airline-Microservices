@@ -1,4 +1,4 @@
-namespace Identity;
+namespace Identity.Identity.Constants;
 
 public static class Constants
 {

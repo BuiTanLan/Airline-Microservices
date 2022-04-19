@@ -37,11 +37,10 @@ public abstract class AppDbContextBase : DbContext, IDbContext
     {
         try
         {
-            OnBeforeSaving();
             await SaveChangesAsync(cancellationToken);
             await _currentTransaction?.CommitAsync(cancellationToken)!;
         }
-        catch
+        catch(System.Exception ex)
         {
             await RollbackTransactionAsync(cancellationToken);
             throw;
@@ -66,6 +65,12 @@ public abstract class AppDbContextBase : DbContext, IDbContext
         }
     }
 
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        OnBeforeSaving();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
         var domainEntities = ChangeTracker
@@ -87,9 +92,9 @@ public abstract class AppDbContextBase : DbContext, IDbContext
     // https://www.meziantou.net/entity-framework-core-soft-delete-using-query-filters.htm
     private void OnBeforeSaving()
     {
-        var claimName = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        var nameIdentifier = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        long.TryParse(claimName, out var userId);
+        long.TryParse(nameIdentifier, out var userId);
 
         foreach (var entry in ChangeTracker.Entries<IAuditable>())
         {

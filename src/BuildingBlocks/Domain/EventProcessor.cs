@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.Outbox;
 using BuildingBlocks.Outbox.EF;
@@ -74,6 +75,9 @@ public sealed class EventProcessor : IEventProcessor
             await _publishEndpoint.Publish((object)integrationEvent, context =>
             {
                 context.CorrelationId = new Guid(_httpContextAccessor.HttpContext.GetCorrelationId());
+                context.Headers.Set("UserId", _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+                context.Headers.Set("UserName", _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.Name));
+
             }, cancellationToken);
 
             _logger.LogTrace("Publish a message with ID: {Id}", integrationEvent?.EventId);

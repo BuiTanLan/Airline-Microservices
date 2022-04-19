@@ -1,4 +1,4 @@
-﻿using BuildingBlocks.EventStoreDB.Core.Projections;
+﻿using BuildingBlocks.Domain.Model;
 using BuildingBlocks.EventStoreDB.Serialization;
 using EventStore.Client;
 

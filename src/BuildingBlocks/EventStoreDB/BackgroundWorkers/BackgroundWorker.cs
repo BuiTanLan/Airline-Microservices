@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.EventStoreDB.BackgroundWorkers;
 
-public class BackgroundWorker: BackgroundService
+public class BackgroundWorker : BackgroundService
 {
     private readonly ILogger<BackgroundWorker> logger;
     private readonly Func<CancellationToken, Task> perform;

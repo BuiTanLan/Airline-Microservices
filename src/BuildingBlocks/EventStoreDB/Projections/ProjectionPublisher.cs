@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingBlocks.EventStoreDB.Projections;
 
-public class ProjectionPublisher: IProjectionPublisher
+public class ProjectionPublisher : IProjectionPublisher
 {
     private readonly IServiceProvider _serviceProvider;
 
@@ -17,10 +17,10 @@ public class ProjectionPublisher: IProjectionPublisher
         where T : INotification
     {
         using var scope = _serviceProvider.CreateScope();
-        var projections = scope.ServiceProvider.GetRequiredService<IEnumerable<IProjection>>();
-        foreach (var projection in projections)
+        var projectionsProcessors = scope.ServiceProvider.GetRequiredService<IEnumerable<IProjectionProcessor>>();
+        foreach (var projectionProcessor in projectionsProcessors)
         {
-            await projection.ProcessEventAsync(streamEvent, cancellationToken);
+            await projectionProcessor.ProcessEventAsync(streamEvent, cancellationToken);
         }
     }
 

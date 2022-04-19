@@ -1,5 +1,4 @@
 using BuildingBlocks.EventStoreDB.Events;
-using BuildingBlocks.EventStoreDB.Events.NoMediator;
 using BuildingBlocks.EventStoreDB.Projections;
 using BuildingBlocks.Utils;
 using EventStore.Client;

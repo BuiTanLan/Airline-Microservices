@@ -113,7 +113,6 @@
   <ItemGroup>
     <Folder Include="Contracts" />
     <Folder Include="EventStoreDB\BackgroundWorkers" />
-    <Folder Include="EventStoreDB\Core" />
   </ItemGroup>
 
 </Project>

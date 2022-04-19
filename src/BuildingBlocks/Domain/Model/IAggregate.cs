@@ -1,5 +1,5 @@
 using BuildingBlocks.Domain.Event;
-using BuildingBlocks.EventStoreDB.Core.Projections;
+using BuildingBlocks.EventStoreDB.Events;
 
 namespace BuildingBlocks.Domain.Model
 {

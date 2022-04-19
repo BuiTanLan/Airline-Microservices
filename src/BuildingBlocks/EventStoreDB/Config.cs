@@ -1,5 +1,6 @@
 using System.Reflection;
 using BuildingBlocks.EventStoreDB.BackgroundWorkers;
+using BuildingBlocks.EventStoreDB.Events;
 using BuildingBlocks.EventStoreDB.Projections;
 using BuildingBlocks.EventStoreDB.Repository;
 using BuildingBlocks.EventStoreDB.Subscriptions;

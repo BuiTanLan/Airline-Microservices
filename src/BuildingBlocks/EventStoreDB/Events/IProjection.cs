@@ -1,4 +1,4 @@
-﻿namespace BuildingBlocks.EventStoreDB.Core.Projections;
+﻿namespace BuildingBlocks.EventStoreDB.Events;
 
 public interface IProjection
 {

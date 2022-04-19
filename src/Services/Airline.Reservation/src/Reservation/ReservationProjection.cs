@@ -7,7 +7,7 @@ using Reservation.Reservations.Events.Domain;
 
 namespace Reservation;
 
-public class ReservationProjection : IProjection
+public class ReservationProjection : IProjectionProcessor
 {
     private readonly ReservationDbContext _reservationDbContext;
 

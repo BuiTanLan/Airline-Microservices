@@ -42,23 +42,6 @@ namespace BuildingBlocks.Web
             });
         }
 
-        public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services,
-            Action<IHealthChecksBuilder> configurator = null)
-        {
-            var healCheckBuilder = services.AddHealthChecks();
-            configurator?.Invoke(healCheckBuilder);
-
-            //// health check ui has problem with .net 6
-            // services.AddHealthChecksUI(setup =>
-            // {
-            //     setup.SetEvaluationTimeInSeconds(60); //time in seconds between check
-            //     setup.AddHealthCheckEndpoint("Basic Health Check", "/healthz");
-            // }).AddInMemoryStorage();
-
-            return services;
-        }
-
-
         public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app)
             => app.Use(async (ctx, next) =>
             {

@@ -1,13 +1,10 @@
 ﻿using System.Reflection;
-using BuildingBlocks.EventStoreDB.Events.NoMediator;
-using BuildingBlocks.EventStoreDB.Repository;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BuildingBlocks.EventStoreDB.Core;
+namespace BuildingBlocks.EventStoreDB;
 
-public static class Configuration
+public static class Extensions
 {
     public static IServiceCollection AddEventStore(
         this IServiceCollection services,

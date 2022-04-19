@@ -40,7 +40,7 @@ public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserComm
         };
 
         var identityResult = await _userManager.CreateAsync(applicationUser, command.Password);
-        var roleResult = await _userManager.AddToRoleAsync(applicationUser, Constants.Role.User);
+        var roleResult = await _userManager.AddToRoleAsync(applicationUser, Constants.Constants.Role.User);
 
         if (identityResult.Succeeded == false)
             throw new RegisterIdentityUserException(string.Join(',', identityResult.Errors.Select(e => e.Description)));
