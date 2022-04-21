@@ -4,6 +4,7 @@ using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
+using BuildingBlocks.InternalProcessor;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Mapster;
@@ -47,7 +48,7 @@ builder.Services.AddCustomProblemDetails();
 builder.Services.AddCustomMapster(typeof(FlightRoot).Assembly);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IEventMapper, EventMapper>();
-
+builder.Services.AddTransient<IInternalCommandMapper, InternalCommandMapper>();
 builder.Services.AddCustomMassTransit(typeof(FlightRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

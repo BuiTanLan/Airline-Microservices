@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.Domain.Model;
 using BuildingBlocks.EFCore;
+using BuildingBlocks.InternalProcessor;
 using BuildingBlocks.Outbox.EF;
 using Identity.Identity.Models;
 using Microsoft.AspNetCore.Http;
@@ -23,18 +24,17 @@ public sealed class IdentityContext : IdentityDbContext<ApplicationUser, Identit
     IdentityUserClaim<long>,
     IdentityUserRole<long>, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>, IDbContext
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     private IDbContextTransaction _currentTransaction;
     public IdentityContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
     {
-        _httpContextAccessor = httpContextAccessor;
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
+        builder.ApplyConfiguration(new InternalMessageEntityTypeConfiguration());
         base.OnModelCreating(builder);
     }
 
@@ -78,7 +78,7 @@ public sealed class IdentityContext : IdentityDbContext<ApplicationUser, Identit
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {
         var domainEntities = ChangeTracker
-            .Entries<IAggregate>()
+            .Entries<Aggregate>()
             .Where(x => x.Entity.DomainEvents.Any())
             .Select(x => x.Entity)
             .ToList();

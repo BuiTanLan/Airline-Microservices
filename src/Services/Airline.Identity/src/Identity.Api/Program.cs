@@ -44,7 +44,9 @@ builder.Services.AddValidatorsFromAssembly(typeof(IdentityRoot).Assembly);
 builder.Services.AddCustomProblemDetails();
 builder.Services.AddCustomMapster(typeof(IdentityRoot).Assembly);
 builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
+
 builder.Services.AddTransient<IEventMapper, EventMapper>();
+builder.Services.AddTransient<IInternalCommandMapper, InternalCommandMapper>();
 
 builder.Services.AddCustomMassTransit(typeof(IdentityRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
