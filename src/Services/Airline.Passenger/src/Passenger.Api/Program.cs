@@ -45,6 +45,7 @@ builder.Services.AddCustomMapster(typeof(PassengerRoot).Assembly);
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<IEventMapper, EventMapper>();
+builder.Services.AddTransient<IInternalCommandMapper, InternalCommandMapper>();
 
 builder.Services.AddCustomMassTransit(typeof(PassengerRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
