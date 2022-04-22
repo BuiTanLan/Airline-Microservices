@@ -2,7 +2,7 @@ namespace BuildingBlocks.InternalProcessor;
 
 public class InternalMessage
 {
-    public Guid Id { get; private set; }
+    public Guid EventId { get; private set; }
 
     /// <summary>
     /// Gets name of message.
@@ -37,7 +37,7 @@ public class InternalMessage
 
 
     public InternalMessage(
-        Guid id,
+        Guid eventId,
         DateTime occurredOn,
         string commandType,
         string name,
@@ -47,7 +47,7 @@ public class InternalMessage
         OccurredOn = occurredOn;
         CommandType = commandType;
         Data = data;
-        Id = id;
+        EventId = eventId;
         Name = name;
         CorrelationId = correlationId;
     }
@@ -59,7 +59,7 @@ public class InternalMessage
 
     public bool Validate()
     {
-        if (Id == Guid.Empty)
+        if (EventId == Guid.Empty)
         {
             throw new System.ComponentModel.DataAnnotations.ValidationException(
                 "Id of the InternalMessage entity couldn't be null.");

@@ -1,13 +1,30 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
+using Flight.Data;
+using Flight.Flights.Models.Reads;
+using Mapster;
 using MediatR;
 
 namespace Flight.Flights.Features.CreateFlight.Read;
 
 public class CreateFlightMongoReadModelHandler : IRequestHandler<CreateFlightMongoReadModel, Unit>
 {
-    public Task<Unit> Handle(CreateFlightMongoReadModel request, CancellationToken cancellationToken)
+    private readonly FlightReadDbContext _flightReadDbContext;
+
+    public CreateFlightMongoReadModelHandler(FlightReadDbContext flightReadDbContext)
     {
-        throw new System.NotImplementedException();
+        _flightReadDbContext = flightReadDbContext;
+    }
+
+    public async Task<Unit> Handle(CreateFlightMongoReadModel command, CancellationToken cancellationToken)
+    {
+        Guard.Against.Null(command, nameof(command));
+
+        var flight = command.Adapt<FlightReadModel>();
+
+        await _flightReadDbContext.Flight.InsertOneAsync(flight, cancellationToken: cancellationToken);
+
+        return Unit.Value;
     }
 }

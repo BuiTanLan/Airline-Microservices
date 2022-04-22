@@ -9,9 +9,9 @@ public class InternalMessageEntityTypeConfiguration : IEntityTypeConfiguration<I
     {
         builder.ToTable("InternalMessages");
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.EventId);
 
-        builder.Property(x => x.Id)
+        builder.Property(x => x.EventId)
             .IsRequired();
 
         builder.Property(x => x.Name)

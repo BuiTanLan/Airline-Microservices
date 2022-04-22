@@ -71,7 +71,7 @@ public class InternalMessageService : IInternalMessageService
             string name = internalCommand.GetType().Name;
 
             var internalMessage = new InternalMessage(
-                internalCommand.Id,
+                internalCommand.EventId,
                 internalCommand.OccurredOn,
                 internalCommand.CommandType,
                 name.Underscore(),
@@ -122,7 +122,7 @@ public class InternalMessageService : IInternalMessageService
                 _logger.LogInformation(
                     "Sent a internal command: '{Name}' with ID: '{Id} (internal-message store)'",
                     internalMessage.Name,
-                    internalCommand.Id);
+                    internalCommand.EventId);
             }
 
             internalMessage.MarkAsProcessed();

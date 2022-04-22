@@ -1,9 +1,12 @@
 using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Flight.Flights.Models.Reads;
 
 public class FlightReadModel
 {
+    public long Id { get; init; }
     public string FlightNumber { get; init; }
     public long AircraftId { get; init; }
     public DateTime DepartureDate { get; init; }

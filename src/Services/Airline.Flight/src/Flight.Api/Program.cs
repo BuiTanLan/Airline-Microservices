@@ -4,14 +4,13 @@ using BuildingBlocks.Domain;
 using BuildingBlocks.EFCore;
 using BuildingBlocks.Exception;
 using BuildingBlocks.IdsGenerator;
-using BuildingBlocks.InternalProcessor;
 using BuildingBlocks.Jwt;
 using BuildingBlocks.Logging;
 using BuildingBlocks.Mapster;
 using BuildingBlocks.MassTransit;
+using BuildingBlocks.Mongo;
 using BuildingBlocks.OpenTelemetry;
 using BuildingBlocks.Outbox;
-using BuildingBlocks.Persistence;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
@@ -34,6 +33,8 @@ Console.WriteLine(FiggleFonts.Standard.Render(appOptions.Name));
 
 builder.Services.AddCustomDbContext<FlightDbContext>(configuration, typeof(FlightRoot).Assembly)
     .AddEntityFrameworkOutbox();
+
+builder.Services.AddMongoDbContext<FlightReadDbContext>(configuration);
 
 builder.Services.AddScoped<IDataSeeder, FlightDataSeeder>();
 

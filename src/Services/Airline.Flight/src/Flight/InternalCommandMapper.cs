@@ -15,7 +15,7 @@ public class InternalCommandMapper : IInternalCommandMapper
     {
         return @event switch
         {
-            FlightCreatedDomainEvent e => new CreateFlightMongoReadModel(e.FlightNumber, e.AircraftId, e.DepartureDate, e.DepartureAirportId,
+            FlightCreatedDomainEvent e => new CreateFlightMongoReadModel(e.Id, e.FlightNumber, e.AircraftId, e.DepartureDate, e.DepartureAirportId,
                 e.ArriveDate, e.ArriveAirportId, e.DurationMinutes, e.FlightDate, e.Status, e.Price),
             _ => null
         };

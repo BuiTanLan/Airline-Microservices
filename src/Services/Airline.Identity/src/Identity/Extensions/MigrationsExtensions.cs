@@ -1,5 +1,5 @@
 using System;
-using BuildingBlocks.Persistence;
+using BuildingBlocks.EFCore;
 using Identity.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

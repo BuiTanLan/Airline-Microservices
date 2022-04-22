@@ -3,17 +3,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Reservation.Data;
+using Passenger.Data;
 
 #nullable disable
 
-namespace Reservation.Data.Migrations
+namespace Passenger.Data.Migrations
 {
-    [DbContext(typeof(ReservationDbContext))]
-    partial class ReservationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(PassengerDbContext))]
+    [Migration("20220422175724_Update-EventId")]
+    partial class UpdateEventId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,10 +94,13 @@ namespace Reservation.Data.Migrations
                     b.ToTable("OutboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("Reservation.Reservations.Models.Reservation", b =>
+            modelBuilder.Entity("Passenger.Passengers.Models.Passenger", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
+
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -112,72 +117,21 @@ namespace Reservation.Data.Migrations
                     b.Property<long?>("LastModifiedBy")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PassengerType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PassportNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("Version")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reservation", "dbo");
-                });
-
-            modelBuilder.Entity("Reservation.Reservations.Models.Reservation", b =>
-                {
-                    b.OwnsOne("Reservation.Reservations.Models.ValueObjects.PassengerInfo", "PassengerInfo", b1 =>
-                        {
-                            b1.Property<long>("ReservationId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ReservationId");
-
-                            b1.ToTable("Reservation", "dbo");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReservationId");
-                        });
-
-                    b.OwnsOne("Reservation.Reservations.Models.ValueObjects.Trip", "Trip", b1 =>
-                        {
-                            b1.Property<long>("ReservationId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("AircraftId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("ArriveAirportId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long>("DepartureAirportId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Description")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<DateTime>("FlightDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("FlightNumber")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<decimal>("Price")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<string>("SeatNumber")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ReservationId");
-
-                            b1.ToTable("Reservation", "dbo");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ReservationId");
-                        });
-
-                    b.Navigation("PassengerInfo");
-
-                    b.Navigation("Trip");
+                    b.ToTable("Passenger", "dbo");
                 });
 #pragma warning restore 612, 618
         }

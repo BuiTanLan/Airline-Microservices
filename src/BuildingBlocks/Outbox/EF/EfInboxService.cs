@@ -13,5 +13,5 @@ public class EfInboxService : IInboxService
     }
 
     public Task<bool> ExistEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
-        => _dbContext.OutboxMessages.AnyAsync(x => x.Id == eventId, cancellationToken);
+        => _dbContext.OutboxMessages.AnyAsync(x => x.EventId == eventId, cancellationToken);
 }

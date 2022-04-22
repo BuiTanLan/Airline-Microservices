@@ -5,7 +5,6 @@ using BuildingBlocks.Mapster;
 using BuildingBlocks.MassTransit;
 using BuildingBlocks.OpenTelemetry;
 using BuildingBlocks.Outbox;
-using BuildingBlocks.Persistence;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
