@@ -4,7 +4,7 @@ namespace BuildingBlocks.Outbox;
 
 public class OutboxMessage
 {
-    public Guid Id { get; private set; }
+    public Guid EventId { get; private set; }
 
     /// <summary>
     /// Gets name of message.
@@ -45,7 +45,7 @@ public class OutboxMessage
     /// Initializes a new instance of the <see cref="OutboxMessage"/> class.
     /// Initializes a new outbox message.
     /// </summary>
-    /// <param name="id">The outbox message identifier.</param>
+    /// <param name="eventId">The outbox message identifier.</param>
     /// <param name="occurredOn">The outbox message date occurred on.</param>
     /// <param name="type">The outbox message type.</param>
     /// <param name="name">The name of event type with underscore naming.</param>
@@ -53,7 +53,7 @@ public class OutboxMessage
     /// <param name="eventType">The outbox event type.</param>
     /// <param name="correlationId">The correlationId of our outbox event.</param>
     public OutboxMessage(
-        Guid id,
+        Guid eventId,
         DateTime occurredOn,
         string type,
         string name,
@@ -64,7 +64,7 @@ public class OutboxMessage
         OccurredOn = occurredOn;
         Type = type;
         Data = data;
-        Id = id;
+        EventId = eventId;
         Name = name;
         EventType = eventType;
         CorrelationId = correlationId;
@@ -80,7 +80,7 @@ public class OutboxMessage
 
     public bool Validate()
     {
-        if (Id == Guid.Empty)
+        if (EventId == Guid.Empty)
         {
             throw new System.ComponentModel.DataAnnotations.ValidationException(
                 "Id of the Outbox entity couldn't be null.");

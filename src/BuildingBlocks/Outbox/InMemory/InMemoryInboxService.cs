@@ -10,5 +10,5 @@ public class InMemoryInboxService : IInboxService
     }
 
     public Task<bool> ExistEventIdAsync(Guid eventId, CancellationToken cancellationToken = default)
-        => Task.FromResult(_inMemoryOutboxStore.Events.Any(x => x.Id == eventId));
+        => Task.FromResult(_inMemoryOutboxStore.Events.Any(x => x.EventId == eventId));
 }

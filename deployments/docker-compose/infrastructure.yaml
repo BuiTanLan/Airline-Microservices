@@ -2,6 +2,9 @@ version: "3.7"
 
 services:
 
+    #######################################################
+    #  Rabbitmq
+    #######################################################
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -12,6 +15,10 @@ services:
     networks:
       - airline
 
+
+    #######################################################
+    #  SqlServer
+    #######################################################
   db:
     container_name: sqldb
     image: mcr.microsoft.com/mssql/server:2017-latest
@@ -25,6 +32,9 @@ services:
       - airline
 
 
+    #######################################################
+    #  Jaeger
+    #######################################################
   jaeger:
     image: jaegertracing/all-in-one
     container_name: jaeger
@@ -40,6 +50,54 @@ services:
       - 14268:14268
       - 16686:16686
 
+
+    #######################################################
+    #  EventStoreDB
+    #######################################################
+  eventstore.db:
+      image: eventstore/eventstore:21.2.0-buster-slim
+      restart: on-failure
+      environment:
+          - EVENTSTORE_CLUSTER_SIZE=1
+          - EVENTSTORE_RUN_PROJECTIONS=All
+          - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+          - EVENTSTORE_EXT_TCP_PORT=1010
+          - EVENTSTORE_EXT_HTTP_PORT=2113
+          - EVENTSTORE_INSECURE=true
+          - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+          - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+      ports:
+          - '1010:1113'
+          - '2113:2113'
+      volumes:
+          - type: volume
+            source: eventstore-volume-data
+            target: /var/lib/eventstore
+          - type: volume
+            source: eventstore-volume-logs
+            target: /var/log/eventstore
+      networks:
+          - airline
+
+
+    #######################################################
+    #  Mongo
+    #######################################################
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=secret
+    networks:
+      - airline
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
+
 networks:
   airline:
     name: airline
@@ -47,3 +105,5 @@ networks:
 volumes:
   db-data:
     external: false
+  mongo:
+    driver: local 

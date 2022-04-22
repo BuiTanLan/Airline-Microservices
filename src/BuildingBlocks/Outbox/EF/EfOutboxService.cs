@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.EFCore;
@@ -140,6 +141,10 @@ public class EfOutboxService : IOutboxService
                     await _pushEndpoint.Publish((object)integrationEvent, context =>
                     {
                         context.CorrelationId = outboxMessage.CorrelationId;
+                        context.Headers.Set("UserId",
+                            _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+                        context.Headers.Set("UserName",
+                            _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.Name));
                     }, cancellationToken);
 
                     _logger.LogTrace(

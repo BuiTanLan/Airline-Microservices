@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Ardalis.GuardClauses;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.Outbox.EF;
@@ -91,12 +92,22 @@ public class InMemoryOutboxService : IOutboxService
                 var integrationEvent = data as IIntegrationEvent;
 
                 // integration event
-                await _pushEndpoint.Publish(integrationEvent, cancellationToken);
+                if (integrationEvent != null)
+                {
+                    await _pushEndpoint.Publish((object)integrationEvent, context =>
+                    {
+                        context.CorrelationId = outboxMessage.CorrelationId;
+                        context.Headers.Set("UserId",
+                            _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+                        context.Headers.Set("UserName",
+                            _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.Name));
+                    }, cancellationToken);
 
-                _logger.LogTrace(
-                    "Publish a message: '{Name}' with ID: '{Id} (outbox)'",
-                    outboxMessage.Name,
-                    integrationEvent?.EventId);
+                    _logger.LogTrace(
+                        "Publish a message: '{Name}' with ID: '{Id} (outbox)'",
+                        outboxMessage.Name,
+                        integrationEvent?.EventId);
+                }
             }
 
             outboxMessage.MarkAsProcessed();

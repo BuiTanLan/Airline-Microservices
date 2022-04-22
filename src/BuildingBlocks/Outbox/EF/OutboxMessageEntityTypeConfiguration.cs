@@ -10,9 +10,9 @@ public class OutboxMessageEntityTypeConfiguration : IEntityTypeConfiguration<Out
     {
         builder.ToTable("OutboxMessages");
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.EventId);
 
-        builder.Property(x => x.Id)
+        builder.Property(x => x.EventId)
             .IsRequired();
 
         builder.Property(x => x.Name)

@@ -106,7 +106,7 @@ Content-Type: application/json
 authorization: bearer {{Authenticate.response.body.access_token}}
 
 {
-  "flightNumber": "12G3T9",
+  "flightNumber": "12BB44",
   "aircraftId": 1,
   "departureAirportId": 1,
   "departureDate": "2022-03-01T14:55:41.255Z",
@@ -115,7 +115,7 @@ authorization: bearer {{Authenticate.response.body.access_token}}
   "durationMinutes": 120,
   "flightDate": "2022-03-01T14:55:41.255Z",
   "status": 1,
-  "price": 4000
+  "price": 8000
 }
 ###
 

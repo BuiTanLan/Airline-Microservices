@@ -5,7 +5,6 @@ using BuildingBlocks.Mapster;
 using BuildingBlocks.MassTransit;
 using BuildingBlocks.OpenTelemetry;
 using BuildingBlocks.Outbox;
-using BuildingBlocks.Persistence;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
@@ -44,7 +43,9 @@ builder.Services.AddValidatorsFromAssembly(typeof(IdentityRoot).Assembly);
 builder.Services.AddCustomProblemDetails();
 builder.Services.AddCustomMapster(typeof(IdentityRoot).Assembly);
 builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
+
 builder.Services.AddTransient<IEventMapper, EventMapper>();
+builder.Services.AddTransient<IInternalCommandMapper, InternalCommandMapper>();
 
 builder.Services.AddCustomMassTransit(typeof(IdentityRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
