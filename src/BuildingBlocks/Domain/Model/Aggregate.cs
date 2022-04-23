@@ -6,7 +6,7 @@ namespace BuildingBlocks.Domain.Model
     {
     }
 
-    public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
+    public abstract class Aggregate<TId> : Auditable, IAggregate<TId>
     {
         private readonly List<IDomainEvent> _domainEvents = new();
         public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
@@ -26,6 +26,9 @@ namespace BuildingBlocks.Domain.Model
         }
 
         public virtual void When(object @event) { }
+
+        public TId Id { get; protected set; }
         public long Version { get; protected set; } = -1;
+        public bool IsDeleted { get; protected set; }
     }
 }

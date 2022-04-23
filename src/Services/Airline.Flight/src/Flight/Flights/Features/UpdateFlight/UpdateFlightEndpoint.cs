@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Flight.Flights.Features.UpdateFlight;
 
-[Route(BaseApiPath + "/flight/update")]
+[Route(BaseApiPath + "/flight")]
 public class UpdateFlightEndpoint : BaseController
 {
     [Authorize]

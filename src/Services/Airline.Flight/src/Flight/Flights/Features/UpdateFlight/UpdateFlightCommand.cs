@@ -17,7 +17,10 @@ public record UpdateFlightCommand : IRequest<FlightResponseDto>, IInvalidateCach
     public long ArriveAirportId { get; init; }
     public decimal DurationMinutes { get; init; }
     public DateTime FlightDate { get; init; }
+
     public FlightStatus Status { get; init; }
+
+    public bool IsDeleted { get; init; } = false;
     public decimal Price { get; init; }
     public string CacheKey => "GetAvailableFlightsQuery";
 }

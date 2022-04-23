@@ -137,7 +137,7 @@ public class InMemoryOutboxService : IOutboxService
 
         _inMemoryOutboxStore.Events.Add(outboxMessages);
 
-        _logger.LogInformation("Saved message to the outbox");
+        _logger.LogTrace("Saved message to the outbox");
 
         return Task.CompletedTask;
     }

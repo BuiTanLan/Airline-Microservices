@@ -17,4 +17,5 @@ public class FlightReadModel
     public DateTime FlightDate { get; init; }
     public FlightStatus Status { get; init; }
     public decimal Price { get; init; }
+    public bool IsDeleted { get; set; }
 }

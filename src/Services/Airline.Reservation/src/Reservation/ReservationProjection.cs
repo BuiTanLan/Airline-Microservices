@@ -35,7 +35,7 @@ public class ReservationProjection : IProjectionProcessor
 
         if (reservation == null)
         {
-            var model = Reservations.Models.Reservation.Create(@event.Id, @event.PassengerInfo, @event.Trip);
+            var model = Reservations.Models.Reservation.Create(@event.Id, @event.PassengerInfo, @event.Trip, @event.IsDeleted);
 
             await _reservationDbContext.Set<Reservations.Models.Reservation>().AddAsync(model, cancellationToken);
             await _reservationDbContext.SaveChangesAsync(cancellationToken);

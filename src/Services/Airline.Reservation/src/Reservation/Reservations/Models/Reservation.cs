@@ -14,16 +14,17 @@ public class Reservation : Aggregate<long>
     public Trip Trip { get; private set; }
     public PassengerInfo PassengerInfo { get; private set; }
 
-    public static Reservation Create(long id, PassengerInfo passengerInfo, Trip trip)
+    public static Reservation Create(long id, PassengerInfo passengerInfo, Trip trip, bool isDeleted = false)
     {
         var reservation = new Reservation()
         {
             Id = id,
             Trip = trip,
-            PassengerInfo = passengerInfo
+            PassengerInfo = passengerInfo,
+            IsDeleted = isDeleted
         };
 
-        var @event = new ReservationCreatedDomainEvent(reservation.Id, reservation.PassengerInfo, reservation.Trip);
+        var @event = new ReservationCreatedDomainEvent(reservation.Id, reservation.PassengerInfo, reservation.Trip, reservation.IsDeleted);
 
         reservation.AddDomainEvent(@event);
         reservation.Apply(@event);
@@ -48,6 +49,7 @@ public class Reservation : Aggregate<long>
         Id = @event.Id;
         Trip = @event.Trip;
         PassengerInfo = @event.PassengerInfo;
+        IsDeleted = @event.IsDeleted;
         Version++;
     }
 }

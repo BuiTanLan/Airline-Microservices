@@ -20,7 +20,7 @@ public class Flight : Aggregate<long>
     public static Flight Create(long id, string flightNumber, long aircraftId,
         long departureAirportId, DateTime departureDate, DateTime arriveDate,
         long arriveAirportId, decimal durationMinutes, DateTime flightDate, FlightStatus status,
-        decimal price)
+        decimal price, bool isDeleted = false)
     {
         var flight = new Flight
         {
@@ -34,13 +34,14 @@ public class Flight : Aggregate<long>
             DurationMinutes = durationMinutes,
             FlightDate = flightDate,
             Status = status,
-            Price = price
+            Price = price,
+            IsDeleted = isDeleted,
         };
 
         var @event = new FlightCreatedDomainEvent(flight.Id, flight.FlightNumber, flight.AircraftId,
             flight.DepartureDate, flight.DepartureAirportId,
             flight.ArriveDate, flight.ArriveAirportId, flight.DurationMinutes, flight.FlightDate, flight.Status,
-            flight.Price);
+            flight.Price, flight.IsDeleted);
 
         flight.AddDomainEvent(@event);
 
@@ -51,10 +52,10 @@ public class Flight : Aggregate<long>
     public void Update(long id, string flightNumber, long aircraftId,
         long departureAirportId, DateTime departureDate, DateTime arriveDate,
         long arriveAirportId, decimal durationMinutes, DateTime flightDate, FlightStatus status,
-        decimal price)
+        decimal price, bool isDeleted = false)
     {
         var @event = new FlightUpdatedDomainEvent(id, flightNumber, aircraftId, departureDate, departureAirportId,
-            arriveDate, arriveAirportId, durationMinutes, flightDate, status, price);
+            arriveDate, arriveAirportId, durationMinutes, flightDate, status, price, isDeleted);
 
         AddDomainEvent(@event);
     }
