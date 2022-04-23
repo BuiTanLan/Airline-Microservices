@@ -2,7 +2,7 @@ using MediatR;
 
 namespace BuildingBlocks.Domain.Event;
 
-public interface IDomainEvent: IEvent
+public interface IDomainEvent : IEvent
 {
 
 }

@@ -1,5 +1,6 @@
 using Ardalis.GuardClauses;
 using BuildingBlocks.Contracts.EventBus.Messages;
+using BuildingBlocks.IdsGenerator;
 using MassTransit;
 using Passenger.Data;
 
@@ -18,7 +19,7 @@ public class RegisterNewUserConsumerHandler : IConsumer<UserCreated>
     {
         Guard.Against.Null(context.Message, nameof(UserCreated));
 
-        var passenger = Passengers.Models.Passenger.Create(context.Message.Name, context.Message.PassportNumber, context.Message.Id);
+        var passenger = Passengers.Models.Passenger.Create(context.Message.Id, context.Message.Name, context.Message.PassportNumber);
 
         await _passengerDbContext.AddAsync(passenger);
 

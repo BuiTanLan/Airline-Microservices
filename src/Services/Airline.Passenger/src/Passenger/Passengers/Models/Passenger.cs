@@ -1,11 +1,10 @@
 using BuildingBlocks.Domain.Model;
-using BuildingBlocks.IdsGenerator;
 
 namespace Passenger.Passengers.Models;
 
 public class Passenger : Aggregate<long>
 {
-    public Passenger CompleteRegistrationPassenger(string name, string passportNumber, PassengerType passengerType, int age, long? id = null)
+    public Passenger CompleteRegistrationPassenger(long id, string name, string passportNumber, PassengerType passengerType, int age)
     {
         var passenger = new Passenger
         {
@@ -13,16 +12,15 @@ public class Passenger : Aggregate<long>
             PassportNumber = passportNumber,
             PassengerType = passengerType,
             Age = age,
-            Id = id ?? SnowFlakIdGenerator.NewId(),
-            LastModified = DateTime.Now
+            Id = id
         };
         return passenger;
     }
 
 
-    public static Passenger Create(string name, string passportNumber ,long? id = null)
+    public static Passenger Create(long id, string name, string passportNumber, bool isDeleted = false)
     {
-        var passenger = new Passenger {Name = name, PassportNumber = passportNumber, Id = id ?? SnowFlakIdGenerator.NewId()};
+        var passenger = new Passenger { Id = id, Name = name, PassportNumber = passportNumber, IsDeleted = isDeleted };
         return passenger;
     }
 

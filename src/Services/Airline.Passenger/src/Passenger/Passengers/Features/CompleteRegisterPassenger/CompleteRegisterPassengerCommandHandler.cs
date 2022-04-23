@@ -30,7 +30,7 @@ public class CompleteRegisterPassengerCommandHandler : IRequestHandler<CompleteR
         if (passenger is null)
             throw new PassengerNotExist();
 
-        var passengerEntity = passenger.CompleteRegistrationPassenger(passenger.Name, passenger.PassportNumber, command.PassengerType, command.Age, passenger.Id);
+        var passengerEntity = passenger.CompleteRegistrationPassenger(passenger.Id, passenger.Name, passenger.PassportNumber, command.PassengerType, command.Age);
 
         var updatePassenger = _passengerDbContext.Passengers.Update(passengerEntity);
 

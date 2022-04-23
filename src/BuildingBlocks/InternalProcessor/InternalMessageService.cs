@@ -83,7 +83,7 @@ public class InternalMessageService : IInternalMessageService
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation("Saved message to the internal-messages store");
+        _logger.LogTrace("Saved message to the internal-messages store");
     }
 
     public async Task PublishUnsentInternalMessagesAsync(CancellationToken cancellationToken = default)
@@ -93,11 +93,11 @@ public class InternalMessageService : IInternalMessageService
 
         if (!unsentMessages.Any())
         {
-            _logger.LogInformation("No unsent messages found in internal-messages store");
+            _logger.LogTrace("No unsent messages found in internal-messages store");
             return;
         }
 
-        _logger.LogInformation(
+        _logger.LogTrace(
             "Found {Count} unsent messages in internal-messages store, sending...",
             unsentMessages.Count);
 
@@ -119,7 +119,7 @@ public class InternalMessageService : IInternalMessageService
             {
                 await _mediator.Send(internalCommand, cancellationToken);
 
-                _logger.LogInformation(
+                _logger.LogTrace(
                     "Sent a internal command: '{Name}' with ID: '{Id} (internal-message store)'",
                     internalMessage.Name,
                     internalCommand.EventId);

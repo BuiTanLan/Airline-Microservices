@@ -96,9 +96,9 @@ public abstract class AppDbContextBase : DbContext, IDbContext
 
         long.TryParse(nameIdentifier, out var userId);
 
-        foreach (var entry in ChangeTracker.Entries<IAuditable>())
+        foreach (var entry in ChangeTracker.Entries<IAggregate>())
         {
-            bool isAuditable = entry.Entity.GetType().IsAssignableTo(typeof(IAuditable));
+            bool isAuditable = entry.Entity.GetType().IsAssignableTo(typeof(IAggregate));
 
             if (isAuditable)
             {
