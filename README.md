@@ -26,7 +26,6 @@ Airline Microservice is a simple Airline application for online reserving flight
 - Correct `separation of bounded contexts` for each microservice.
 - Communications between bounded contexts through asynchronous `MessageBus` and `events`.
 - Simple `CQRS` implementation and event driven architecture.
-- Using [Inbox Pattern](https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/) for guaranty message [Idempotency](https://www.enterpriseintegrationpatterns.com/patterns/messaging/IdempotentReceiver.html) for receiver microservice and [Exactly-once Delivery](https://www.cloudcomputingpatterns.org/exactly_once_delivery/) pattern and using [Outbox Pattern](https://event-driven.io/en/outbox_inbox_patterns_and_delivery_guarantees_explained/) for ensuring about any message lost and [At-Least one Delivery](https://www.cloudcomputingpatterns.org/at_least_once_delivery/) rule.
 - Using `Best Practice` and `New Technologies` and `Design Patterns`.
 - Using `Docker-Compose` and `Kubernetes` for our deployment mechanism.
 - Implementing various type of testing like `Unit Testing`, `Integration Testing`.
