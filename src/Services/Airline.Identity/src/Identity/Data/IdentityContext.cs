@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data;
@@ -9,8 +8,6 @@ using System.Threading.Tasks;
 using BuildingBlocks.Domain.Event;
 using BuildingBlocks.Domain.Model;
 using BuildingBlocks.EFCore;
-using BuildingBlocks.InternalProcessor;
-using BuildingBlocks.Outbox.EF;
 using Identity.Identity.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -33,8 +30,6 @@ public sealed class IdentityContext : IdentityDbContext<ApplicationUser, Identit
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        builder.ApplyConfiguration(new OutboxMessageEntityTypeConfiguration());
-        builder.ApplyConfiguration(new InternalMessageEntityTypeConfiguration());
         base.OnModelCreating(builder);
     }
 

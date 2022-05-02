@@ -12,16 +12,16 @@ public class EfTxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TRe
 {
     private readonly ILogger<EfTxBehavior<TRequest, TResponse>> _logger;
     private readonly IDbContext _dbContextBase;
-    private readonly IEventProcessor _eventProcessor;
+    private readonly IBusPublisher _busPublisher;
 
     public EfTxBehavior(
         ILogger<EfTxBehavior<TRequest, TResponse>> logger,
         IDbContext dbContextBase,
-        IEventProcessor eventProcessor)
+        IBusPublisher busPublisher)
     {
         _logger = logger;
         _dbContextBase = dbContextBase;
-        _eventProcessor = eventProcessor;
+        _busPublisher = busPublisher;
     }
 
     public async Task<TResponse> Handle(
@@ -58,7 +58,7 @@ public class EfTxBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TRe
 
             var domainEvents = _dbContextBase.GetDomainEvents();
 
-            await _eventProcessor.ProcessAsync(domainEvents.ToArray(), cancellationToken);
+            await _busPublisher.SendAsync(domainEvents.ToArray(), cancellationToken);
 
             await _dbContextBase.CommitTransactionAsync(cancellationToken);
 

@@ -4,7 +4,6 @@ using BuildingBlocks.Logging;
 using BuildingBlocks.Mapster;
 using BuildingBlocks.MassTransit;
 using BuildingBlocks.OpenTelemetry;
-using BuildingBlocks.Outbox;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
@@ -31,8 +30,7 @@ builder.Services.AddScoped<IDbContext>(provider => provider.GetService<IdentityC
 builder.Services.AddDbContext<IdentityContext>(options =>
         options.UseSqlServer(
             configuration.GetConnectionString("DefaultConnection"),
-            x => x.MigrationsAssembly(typeof(IdentityRoot).Assembly.GetName().Name)))
-    .AddEntityFrameworkOutbox();
+            x => x.MigrationsAssembly(typeof(IdentityRoot).Assembly.GetName().Name)));
 
 builder.AddCustomSerilog();
 builder.Services.AddControllers();
@@ -45,7 +43,7 @@ builder.Services.AddCustomMapster(typeof(IdentityRoot).Assembly);
 builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
 
 builder.Services.AddTransient<IEventMapper, EventMapper>();
-builder.Services.AddTransient<IInternalCommandMapper, InternalCommandMapper>();
+builder.Services.AddTransient<IBusPublisher, BusPublisher>();
 
 builder.Services.AddCustomMassTransit(typeof(IdentityRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
@@ -61,6 +59,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+app.UseMigrations();
 app.UseCorrelationId();
 app.UseRouting();
 app.UseHttpMetrics();

@@ -7,7 +7,6 @@ using BuildingBlocks.Logging;
 using BuildingBlocks.Mapster;
 using BuildingBlocks.MassTransit;
 using BuildingBlocks.OpenTelemetry;
-using BuildingBlocks.Outbox;
 using BuildingBlocks.Swagger;
 using BuildingBlocks.Utils;
 using BuildingBlocks.Web;
@@ -30,8 +29,7 @@ builder.Services.Configure<GrpcOptions>(options => configuration.GetSection("Grp
 
 Console.WriteLine(FiggleFonts.Standard.Render(appOptions.Name));
 
-builder.Services.AddCustomDbContext<ReservationDbContext>(configuration, typeof(ReservationRoot).Assembly)
-    .AddEntityFrameworkOutbox();
+builder.Services.AddCustomDbContext<ReservationDbContext>(configuration, typeof(ReservationRoot).Assembly);
 
 builder.AddCustomSerilog();
 builder.Services.AddJwt();
@@ -46,7 +44,7 @@ builder.Services.AddCustomMapster(typeof(ReservationRoot).Assembly);
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddTransient<IEventMapper, EventMapper>();
-builder.Services.AddTransient<IInternalCommandMapper, InternalCommandMapper>();
+builder.Services.AddTransient<IBusPublisher, BusPublisher>();
 
 builder.Services.AddCustomMassTransit(typeof(ReservationRoot).Assembly);
 builder.Services.AddCustomOpenTelemetry();
@@ -66,6 +64,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+app.UseMigrations();
 app.UseCorrelationId();
 app.UseRouting();
 app.UseHttpMetrics();

@@ -9,6 +9,7 @@ using Flight.Flights.Events.Domain;
 
 namespace Flight;
 
+// ref: https://www.ledjonbehluli.com/posts/domain_to_integration_event/
 public sealed class EventMapper : IEventMapper
 {
     public IEnumerable<IIntegrationEvent> MapAll(IEnumerable<IDomainEvent> events) => events.Select(Map);

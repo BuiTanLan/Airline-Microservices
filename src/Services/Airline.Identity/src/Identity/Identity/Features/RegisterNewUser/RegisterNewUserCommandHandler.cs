@@ -14,14 +14,14 @@ namespace Identity.Identity.Features.RegisterNewUser;
 
 public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserCommand, RegisterNewUserResponseDto>
 {
-    private readonly IEventProcessor _eventProcessor;
+    private readonly IBusPublisher _busPublisher;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public RegisterNewUserCommandHandler(UserManager<ApplicationUser> userManager,
-        IEventProcessor eventProcessor)
+        IBusPublisher busPublisher)
     {
         _userManager = userManager;
-        _eventProcessor = eventProcessor;
+        _busPublisher = busPublisher;
     }
 
     public async Task<RegisterNewUserResponseDto> Handle(RegisterNewUserCommand command,
@@ -48,8 +48,7 @@ public class RegisterNewUserCommandHandler : IRequestHandler<RegisterNewUserComm
         if (roleResult.Succeeded == false)
             throw new RegisterIdentityUserException(string.Join(',', roleResult.Errors.Select(e => e.Description)));
 
-        await _eventProcessor.PublishAsync(
-            new UserCreated(applicationUser.Id, applicationUser.FirstName + " " + applicationUser.LastName,
+        await _busPublisher.SendAsync(new UserCreated(applicationUser.Id, applicationUser.FirstName + " " + applicationUser.LastName,
                 applicationUser.PassPortNumber), cancellationToken);
 
         return new RegisterNewUserResponseDto
