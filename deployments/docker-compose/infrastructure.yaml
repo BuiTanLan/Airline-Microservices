@@ -69,10 +69,6 @@ services:
       ports:
           - '1010:1113'
           - '2113:2113'
-      volumes:
-          - type: volume
-            source: eventstore-volume-logs
-            target: /var/log/eventstore
       networks:
           - airline
 
@@ -104,5 +100,3 @@ volumes:
     external: false
   mongo:
     driver: local
-  eventstore-volume-data:
-  eventstore-volume-logs: 

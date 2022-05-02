@@ -2,6 +2,7 @@
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Events;
+using Serilog.Sinks.SpectreConsole;
 
 namespace BuildingBlocks.Logging;
 
@@ -15,6 +16,7 @@ public static class Extensions
 
         builder.Host.UseSerilog((ctx, lc) => lc
             .WriteTo.Console()
+            .WriteTo.SpectreConsole("{Timestamp:HH:mm:ss} [{Level:u4}] {Message:lj}{NewLine}{Exception}", LogEventLevel.Error)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Error)
             .Enrich.WithSpan()
             .Enrich.FromLogContext()
